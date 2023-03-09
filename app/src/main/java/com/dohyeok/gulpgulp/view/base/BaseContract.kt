@@ -4,7 +4,8 @@ interface BaseContract {
     interface View {
 
     }
-    interface Presenter<T: View> {
+
+    interface Presenter<T : View> {
         var view: T
     }
 }

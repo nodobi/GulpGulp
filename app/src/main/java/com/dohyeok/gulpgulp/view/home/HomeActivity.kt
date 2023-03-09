@@ -1,12 +1,13 @@
 package com.dohyeok.gulpgulp.view.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.dohyeok.gulpgulp.R
+import com.dohyeok.gulpgulp.databinding.HomeActivityBinding
+import com.dohyeok.gulpgulp.view.base.BaseActivity
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inflate(it) }) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        setSupportActionBar(binding.toolbarHome)
     }
 }
