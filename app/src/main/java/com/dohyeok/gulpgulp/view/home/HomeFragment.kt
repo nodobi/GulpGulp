@@ -7,6 +7,7 @@ import com.dohyeok.gulpgulp.view.base.BaseFragment
 import com.dohyeok.gulpgulp.view.home.contract.HomeContract
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>(), HomeContract.View {
+    override lateinit var presenter: HomeContract.Presenter
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
