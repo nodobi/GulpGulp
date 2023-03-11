@@ -1,6 +1,7 @@
 package com.dohyeok.gulpgulp.view.home
 
 import android.os.Bundle
+import com.dohyeok.gulpgulp.R
 import com.dohyeok.gulpgulp.databinding.HomeActivityBinding
 import com.dohyeok.gulpgulp.util.replaceFragment
 import com.dohyeok.gulpgulp.view.base.BaseActivity
@@ -19,7 +20,9 @@ class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inf
         }
         homeFragment.presenter = homePresenter
 
-        binding.toolbarHome.apply {
+        binding.toolbar.view.apply {
+            inflateMenu(R.menu.menu_home_toolbar)
+            setNavigationIcon(R.drawable.ic_calendar_24dp)
             setOnMenuItemClickListener(homePresenter.onMenuClick)
             setNavigationOnClickListener(homePresenter.onNavigationClick)
         }

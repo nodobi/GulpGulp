@@ -23,27 +23,9 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        app:elevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/all_toolbar" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/ToolBar"
-            app:menu="@menu/menu_home_toolbar"
-            app:navigationIcon="@drawable/ic_calendar_24dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="@string/toolbar_home_title"
-            app:titleTextColor="?attr/colorPrimary" />
-
-    </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
