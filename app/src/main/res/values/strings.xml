@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">GulpGulp</string>
     <string name="toolbar_option">option</string>
-    <string name="toolbar_home_title"> </string>
+    <string name="toolbar_title_empty"> </string>
 </resources>

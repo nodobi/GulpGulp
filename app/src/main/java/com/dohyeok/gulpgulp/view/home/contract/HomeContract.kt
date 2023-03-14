@@ -9,8 +9,6 @@ interface HomeContract {
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-
-        var onNavigationClick: ((android.view.View)-> Unit)
         var onMenuClick: ((MenuItem) -> Boolean)
     }
 }

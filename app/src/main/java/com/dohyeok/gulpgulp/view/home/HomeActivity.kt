@@ -4,7 +4,9 @@ import android.os.Bundle
 import com.dohyeok.gulpgulp.R
 import com.dohyeok.gulpgulp.databinding.HomeActivityBinding
 import com.dohyeok.gulpgulp.util.replaceFragment
+import com.dohyeok.gulpgulp.util.startActivityWithoutIntent
 import com.dohyeok.gulpgulp.view.base.BaseActivity
+import com.dohyeok.gulpgulp.view.calendar.CalendarActivity
 import com.dohyeok.gulpgulp.view.home.contract.HomePresenter
 
 class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inflate(it) }) {
@@ -24,9 +26,16 @@ class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inf
             inflateMenu(R.menu.menu_home_toolbar)
             setNavigationIcon(R.drawable.ic_calendar_24dp)
             setOnMenuItemClickListener(homePresenter.onMenuClick)
-            setNavigationOnClickListener(homePresenter.onNavigationClick)
+            setNavigationOnClickListener {
+                onNavigationClick()
+            }
         }
 
         replaceFragment(binding.frameContent.id, homeFragment)
     }
+
+    private fun onNavigationClick() {
+        startActivityWithoutIntent(this, CalendarActivity::class.java)
+    }
+
 }

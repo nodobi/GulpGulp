@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/calendar_fragment">
+
+    <ProgressBar
+        android:id="@+id/progress_date_goal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="@dimen/calendar_margin_left"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/calendar_margin_right"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:max="100"
+        android:progress="30"
+        android:progressBackgroundTint="@color/blue_200"
+        android:progressDrawable="@drawable/progressbar_horizontal"
+        android:progressTint="@color/blue_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_calendar_detail_date" />
+
+    <TextView
+        android:id="@+id/text_calendar_goal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="섭취량 없음"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_date_goal" />
+
+    <TextView
+        android:id="@+id/text_calendar_goal_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="총 섭취량 : 0000ml"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_calendar_goal" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_calendar_date"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="@dimen/calendar_margin_left"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/calendar_margin_right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_calendar_goal_total" />
+
+    <Button
+        android:id="@+id/btn_calendar_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:text="누락된 음료 추가, 삭제"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_calendar_date" />
+
+
+</merge>
