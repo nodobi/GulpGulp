@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dohyeok.gulpgulp.databinding.CalendarFragmentBinding
 import com.dohyeok.gulpgulp.databinding.CalendarIncludeDetailBinding
 import com.dohyeok.gulpgulp.util.yearMonthDateKrFormat
 import com.dohyeok.gulpgulp.util.yearMonthKrFormat
 import com.dohyeok.gulpgulp.view.base.BaseFragment
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapter
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapter
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarContract
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarPresenter
 import java.time.LocalDate
@@ -19,6 +21,7 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
     private val binding_include: CalendarIncludeDetailBinding get() = _binding_include!!
     private var _binding_include : CalendarIncludeDetailBinding? = null
     private lateinit var adapter: CalendarAdapter
+    private lateinit var detailAdapter: CalendarDetailAdapter
     lateinit var presenter: CalendarPresenter
 
     override fun onDestroyView() {
@@ -37,15 +40,23 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = CalendarAdapter(requireContext())
+        detailAdapter = CalendarDetailAdapter(requireContext())
         presenter = CalendarPresenter().apply {
             this.view = this@CalendarFragment
             adapterView = adapter
             adapterModel = adapter
+            detailAdapterView = detailAdapter
+            detailAdapterModel = detailAdapter
         }
 
         binding.recyclerCalendar.apply {
             adapter = this@CalendarFragment.adapter
             layoutManager = GridLayoutManager(requireContext(), 7)
+        }
+
+        binding_include.recyclerCalendarDate.apply {
+            adapter = this@CalendarFragment.detailAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
         presenter.updateAdapterData()
