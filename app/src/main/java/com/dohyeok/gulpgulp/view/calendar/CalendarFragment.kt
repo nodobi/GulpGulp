@@ -1,11 +1,15 @@
 package com.dohyeok.gulpgulp.view.calendar
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
+import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
+import com.dohyeok.gulpgulp.data.source.drink.local.DrinkLocalDataSource
 import com.dohyeok.gulpgulp.databinding.CalendarFragmentBinding
 import com.dohyeok.gulpgulp.databinding.CalendarIncludeDetailBinding
 import com.dohyeok.gulpgulp.util.yearMonthDateKrFormat
@@ -19,7 +23,7 @@ import java.time.LocalDate
 
 class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContract.View {
     private val binding_include: CalendarIncludeDetailBinding get() = _binding_include!!
-    private var _binding_include : CalendarIncludeDetailBinding? = null
+    private var _binding_include: CalendarIncludeDetailBinding? = null
     private lateinit var adapter: CalendarAdapter
     private lateinit var detailAdapter: CalendarDetailAdapter
     lateinit var presenter: CalendarPresenter
@@ -38,16 +42,22 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
     }
 
+    @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = CalendarAdapter(requireContext())
         detailAdapter = CalendarDetailAdapter(requireContext())
-        presenter = CalendarPresenter().apply {
-            this.view = this@CalendarFragment
-            adapterView = adapter
-            adapterModel = adapter
-            detailAdapterView = detailAdapter
-            detailAdapterModel = detailAdapter
-        }
+        presenter = CalendarPresenter(
+            this,
+            adapter,
+            adapter,
+            detailAdapter,
+            detailAdapter,
+            DrinkRepository.apply {
+                drinkLocalDataSource = DrinkLocalDataSource.apply {
+                    drinkDao = DrinkDatabase.getInstance(requireContext()).drinkDao()
+                }
+            })
+        presenter.updateDetailData()
 
         binding.recyclerCalendar.apply {
             adapter = this@CalendarFragment.adapter

@@ -9,9 +9,12 @@ import java.time.LocalDate
 class CalendarViewHolder(private val binding: CalendarItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun onBind(date: LocalDate, width: Int, height: Int) {
+    fun onBind(date: LocalDate, width: Int, height: Int, onDateClicked: (LocalDate) -> Unit) {
         binding.textDate.text = date.dayOfMonth.padZero()
-        binding.root.layoutParams = RelativeLayout.LayoutParams(width, height)
-        binding.root.requestLayout()
+        binding.root.apply {
+            setOnClickListener { onDateClicked.invoke(date) }
+            layoutParams = RelativeLayout.LayoutParams(width, height)
+            requestLayout()
+        }
     }
 }

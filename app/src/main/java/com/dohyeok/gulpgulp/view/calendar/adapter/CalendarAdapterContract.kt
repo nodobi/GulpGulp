@@ -6,8 +6,11 @@ interface CalendarAdapterContract {
     interface View {
         fun notifyAdapter()
     }
+
     interface Model {
         fun updateData(data: List<LocalDate>)
         fun updateSize(column: Int, row: Int)
+
+        var onDateClicked: ((LocalDate) -> Unit)
     }
 }

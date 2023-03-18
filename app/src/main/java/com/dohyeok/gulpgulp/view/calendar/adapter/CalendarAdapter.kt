@@ -9,6 +9,7 @@ import java.time.LocalDate
 
 class CalendarAdapter(private val context: Context) : RecyclerView.Adapter<CalendarViewHolder>(),
     CalendarAdapterContract.View, CalendarAdapterContract.Model {
+    override lateinit var onDateClicked: (LocalDate) -> Unit
     private var data: List<LocalDate> = listOf()
 
     private var column: Int = 1
@@ -17,7 +18,7 @@ class CalendarAdapter(private val context: Context) : RecyclerView.Adapter<Calen
     private var height: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        if(column != 1 && row != 1) {
+        if (column != 1 && row != 1) {
             width = parent.measuredWidth / column
             height = parent.measuredHeight / row
         }
@@ -35,7 +36,7 @@ class CalendarAdapter(private val context: Context) : RecyclerView.Adapter<Calen
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.onBind(data[position], width, height)
+        holder.onBind(data[position], width, height, onDateClicked)
     }
 
     override fun notifyAdapter() {
