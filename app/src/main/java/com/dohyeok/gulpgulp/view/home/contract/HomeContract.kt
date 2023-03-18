@@ -1,7 +1,8 @@
 package com.dohyeok.gulpgulp.view.home.contract
 
-import android.view.MenuItem
+import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.view.base.BaseContract
+import com.dohyeok.gulpgulp.view.home.adapter.HomeDrinkAdapterContract
 
 interface HomeContract {
     interface View : BaseContract.View {
@@ -9,6 +10,9 @@ interface HomeContract {
     }
 
     interface Presenter : BaseContract.Presenter<View> {
-        var onMenuClick: ((MenuItem) -> Boolean)
+        var adapterView: HomeDrinkAdapterContract.View
+        var adapterModel: HomeDrinkAdapterContract.Model
+        var drinkRepository: DrinkRepository
+        fun updateDrinkData()
     }
 }

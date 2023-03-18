@@ -5,7 +5,7 @@ import com.dohyeok.gulpgulp.data.source.drink.DrinkDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DrinkLocalDataSource : DrinkDataSource {
+object DrinkLocalDataSource : DrinkDataSource {
     lateinit var drinkDao: DrinkDao
     override suspend fun insertDrink(drink: Drink) = withContext(Dispatchers.IO) {
         drinkDao.insertDrink(drink)
