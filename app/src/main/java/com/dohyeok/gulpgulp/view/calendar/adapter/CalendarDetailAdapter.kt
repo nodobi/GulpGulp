@@ -10,7 +10,7 @@ import com.dohyeok.gulpgulp.databinding.CalendarDetailItemBinding
 class CalendarDetailAdapter(private val context: Context) :
     RecyclerView.Adapter<CalendarDetailViewHolder>(), CalendarDetailAdapterContract.View,
     CalendarDetailAdapterContract.Model {
-    var drinkData: List<Drink> = listOf()
+    override var drinkData: ArrayList<Drink> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarDetailViewHolder {
         return CalendarDetailViewHolder(
@@ -31,10 +31,25 @@ class CalendarDetailAdapter(private val context: Context) :
     }
 
     override fun updateDrinkData(loadDrinks: List<Drink>) {
-        drinkData = loadDrinks
+        drinkData = ArrayList(loadDrinks)
     }
 
     override fun notifyDataChanged() {
         notifyDataSetChanged()
     }
+
+    override fun notifyItemDraw(position: Int) {
+        notifyItemChanged(position)
+    }
+
+    override fun removeItem(position: Int) {
+        drinkData.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    override fun restoreItem(item: Drink, position: Int) {
+        drinkData.add(position, item)
+        notifyItemInserted(position)
+    }
+
 }

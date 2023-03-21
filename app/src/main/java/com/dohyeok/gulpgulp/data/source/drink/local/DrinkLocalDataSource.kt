@@ -19,4 +19,8 @@ object DrinkLocalDataSource : DrinkDataSource {
     override suspend fun loadDrinks(date: LocalDate): List<Drink> = withContext(Dispatchers.IO) {
         drinkDao.loadDrinks(date)
     }
+
+    override suspend fun deleteDrink(drink: Drink) = withContext(Dispatchers.IO) {
+        drinkDao.deleteDrink(drink)
+    }
 }

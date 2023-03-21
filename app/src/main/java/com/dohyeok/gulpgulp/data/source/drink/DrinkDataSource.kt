@@ -8,4 +8,5 @@ interface DrinkDataSource {
     suspend fun insertDrink(drink: Drink)
     suspend fun loadDrinks(): List<Drink>
     suspend fun loadDrinks(date: LocalDate): List<Drink>
+    suspend fun deleteDrink(drink: Drink)
 }

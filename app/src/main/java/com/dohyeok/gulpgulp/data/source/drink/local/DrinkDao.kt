@@ -1,9 +1,6 @@
 package com.dohyeok.gulpgulp.data.source.drink.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.dohyeok.gulpgulp.data.Drink
 import java.time.LocalDate
 
@@ -17,5 +14,8 @@ interface DrinkDao {
 
     @Query("SELECT * FROM drinks WHERE date = :date")
     fun loadDrinks(date: LocalDate): List<Drink>
+
+    @Delete
+    fun deleteDrink(drink: Drink)
 
 }

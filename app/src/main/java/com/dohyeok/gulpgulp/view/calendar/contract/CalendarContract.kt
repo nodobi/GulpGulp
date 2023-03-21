@@ -2,6 +2,7 @@ package com.dohyeok.gulpgulp.view.calendar.contract
 
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.view.base.BaseContract
+import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapterContract
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapterContract
 import java.time.LocalDate
@@ -9,6 +10,8 @@ import java.time.LocalDate
 interface CalendarContract {
     interface View : BaseContract.View {
         fun updateCalendarDates(date: LocalDate)
+        fun attachItemTouchHelper(itemTouchCallback: ItemTouchCallback)
+        fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit))
     }
 
     interface Presenter : BaseContract.Presenter<View> {

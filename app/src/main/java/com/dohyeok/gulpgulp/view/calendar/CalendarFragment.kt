@@ -1,11 +1,12 @@
 package com.dohyeok.gulpgulp.view.calendar
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
@@ -42,7 +43,6 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
     }
 
-    @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = CalendarAdapter(requireContext())
         detailAdapter = CalendarDetailAdapter(requireContext())
@@ -66,7 +66,8 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
 
         binding_include.recyclerCalendarDate.apply {
             adapter = this@CalendarFragment.detailAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
         presenter.updateAdapterData()
@@ -78,5 +79,23 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
     override fun updateCalendarDates(date: LocalDate) {
         binding.textCalendarDate.text = date.yearMonthKrFormat
         binding.textCalendarDetailDate.text = date.yearMonthDateKrFormat
+    }
+
+    override fun attachItemTouchHelper(itemTouchCallback: ItemTouchCallback) {
+        val helper = ItemTouchHelper(itemTouchCallback)
+        helper.attachToRecyclerView(binding_include.recyclerCalendarDate)
+    }
+
+    override fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit)) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("정말 지우시겠습니까 ?")
+            .setPositiveButton(
+                "ok"
+            ) { dialog, which -> onPositive.invoke(Unit) }
+            .setNegativeButton(
+                "cancel"
+            ) { dialog, which -> onDismiss.invoke(Unit) }
+            .create()
+            .show()
     }
 }

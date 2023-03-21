@@ -1,7 +1,10 @@
 package com.dohyeok.gulpgulp.view.calendar.contract
 
+import androidx.recyclerview.widget.RecyclerView
+import com.dohyeok.gulpgulp.data.Drink
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.util.CalendarUtil
+import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapterContract
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapterContract
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +30,25 @@ class CalendarPresenter constructor(
     fun updateAdapterData() {
         adapterModel.updateSize(7, CalendarUtil.getCalendarWeekCnt(date))
         adapterModel.updateData(CalendarUtil.getDateList(date))
+
+        view.attachItemTouchHelper(object : ItemTouchCallback() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val pos: Int = viewHolder.adapterPosition
+                val item: Drink = detailAdapterModel.drinkData[pos]
+                detailAdapterView.notifyItemDraw(pos)
+                val onPositive: (Unit) -> Unit = {
+                    detailAdapterModel.removeItem(pos)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        drinkRepository.deleteDrink(item)
+                    }
+                }
+                val onNegative: (Unit) -> Unit = {
+
+                }
+
+                view.showDialog(onPositive, onNegative)
+            }
+        })
     }
 
     override fun updateDate() {
