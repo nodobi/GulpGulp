@@ -2,4 +2,8 @@
     <string name="app_name">GulpGulp</string>
     <string name="toolbar_option">option</string>
     <string name="toolbar_title_empty"> </string>
+
+    <!-- Preference -->
+    <string name="preference_alert_title">알림</string>
+    <string name="preference_drink_title">음료 관리</string>
 </resources>

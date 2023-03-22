@@ -7,6 +7,7 @@ import com.dohyeok.gulpgulp.util.replaceFragment
 import com.dohyeok.gulpgulp.util.startActivityWithoutIntent
 import com.dohyeok.gulpgulp.view.base.BaseActivity
 import com.dohyeok.gulpgulp.view.calendar.CalendarActivity
+import com.dohyeok.gulpgulp.view.setting.SettingActivity
 
 class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inflate(it) }) {
     private lateinit var homeFragment: HomeFragment
@@ -17,6 +18,12 @@ class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inf
         homeFragment = HomeFragment()
         binding.toolbar.view.apply {
             inflateMenu(R.menu.menu_home_toolbar)
+            setOnMenuItemClickListener {
+                if (it.itemId == R.id.item_option) {
+                    onOptionClick()
+                }
+                true
+            }
             setNavigationIcon(R.drawable.ic_calendar_24dp)
             setNavigationOnClickListener {
                 onNavigationClick()
@@ -28,6 +35,10 @@ class HomeActivity : BaseActivity<HomeActivityBinding>({ HomeActivityBinding.inf
 
     private fun onNavigationClick() {
         startActivityWithoutIntent(this, CalendarActivity::class.java)
+    }
+
+    private fun onOptionClick() {
+        startActivityWithoutIntent(this, SettingActivity::class.java)
     }
 
 }

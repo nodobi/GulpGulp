@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/margin_medium">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_alert_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="view_alert_detail_frame, text_alert_detail_title" />
+
+    <!-- 알람 설정 -->
+    <View
+        android:id="@+id/view_alert_frame"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin_top_big"
+        android:background="@drawable/shape_preference"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_alert_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:gravity="center"
+        android:text="@string/preference_alert_title"
+        app:layout_constraintBottom_toBottomOf="@id/view_alert_frame"
+        app:layout_constraintStart_toStartOf="@id/view_alert_frame"
+        app:layout_constraintTop_toTopOf="@id/view_alert_frame" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="@id/view_alert_frame"
+        app:layout_constraintEnd_toEndOf="@id/view_alert_frame"
+        app:layout_constraintTop_toTopOf="@+id/view_alert_frame" />
+
+    <!-- 알람 시간 설정 -->
+    <View
+        android:id="@+id/view_alert_detail_frame"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/shape_preference"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_alert_frame" />
+
+    <TextView
+        android:id="@+id/text_alert_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:gravity="center"
+        android:text="@string/preference_alert_title"
+        app:layout_constraintBottom_toBottomOf="@id/view_alert_detail_frame"
+        app:layout_constraintStart_toStartOf="@id/view_alert_detail_frame"
+        app:layout_constraintTop_toTopOf="@id/view_alert_detail_frame" />
+
+    <!-- 음료 설정 -->
+    <View
+        android:id="@+id/view_drink_frame"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/shape_preference"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_alert_detail_frame" />
+
+    <TextView
+        android:id="@+id/text_drink_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:gravity="center"
+        android:text="@string/preference_drink_title"
+        app:layout_constraintBottom_toBottomOf="@id/view_drink_frame"
+        app:layout_constraintStart_toStartOf="@id/view_drink_frame"
+        app:layout_constraintTop_toTopOf="@id/view_drink_frame" />
+
+    <ImageView
+        android:id="@+id/image_drink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:src="@drawable/ic_front_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/view_drink_frame"
+        app:layout_constraintEnd_toEndOf="@id/view_drink_frame"
+        app:layout_constraintTop_toTopOf="@+id/view_drink_frame"
+        app:tint="#AAAAAA" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

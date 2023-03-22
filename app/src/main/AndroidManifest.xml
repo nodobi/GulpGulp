@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.calendar.CalendarActivity" />
+        <activity android:name=".view.setting.SettingActivity" />
     </application>
 
 </manifest>
