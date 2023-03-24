@@ -9,11 +9,11 @@ class HomeDrinkViewHolder(private val binding: HomeDrinkItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("ResourceType")
-    fun onBind(drink: Drink, action: ((Drink) -> Unit)) {
-        binding.imageHomeDrink.setImageResource(drink.iconId)
-        binding.textHomeDrink.text = drink.name
+    fun onBind(drinkRecord: Drink, action: (Drink) -> Unit) {
+        binding.imageHomeDrink.setImageResource(drinkRecord.iconId)
+        binding.textHomeDrink.text = drinkRecord.name
         binding.root.setOnClickListener {
-            action.invoke(drink)
+            action.invoke(drinkRecord)
         }
     }
 

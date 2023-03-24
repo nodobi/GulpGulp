@@ -1,7 +1,7 @@
 package com.dohyeok.gulpgulp.view.calendar.contract
 
 import androidx.recyclerview.widget.RecyclerView
-import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.util.CalendarUtil
 import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
@@ -34,12 +34,12 @@ class CalendarPresenter constructor(
         view.attachItemTouchHelper(object : ItemTouchCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos: Int = viewHolder.adapterPosition
-                val item: Drink = detailAdapterModel.drinkData[pos]
+                val item: DrinkRecord = detailAdapterModel.recordData[pos]
                 detailAdapterView.notifyItemDraw(pos)
                 val onPositive: (Unit) -> Unit = {
                     detailAdapterModel.removeItem(pos)
                     CoroutineScope(Dispatchers.IO).launch {
-                        drinkRepository.deleteDrink(item)
+                        drinkRepository.deleteDrinkRecord(item)
                     }
                 }
                 val onNegative: (Unit) -> Unit = {
@@ -57,7 +57,7 @@ class CalendarPresenter constructor(
 
     override fun updateDetailData() {
         CoroutineScope(Dispatchers.Main).launch {
-            detailAdapterModel.updateDrinkData(drinkRepository.loadDrinks(date))
+            detailAdapterModel.updateDrinkData(drinkRepository.loadDrinkRecords(date))
             detailAdapterView.notifyDataChanged()
         }
     }

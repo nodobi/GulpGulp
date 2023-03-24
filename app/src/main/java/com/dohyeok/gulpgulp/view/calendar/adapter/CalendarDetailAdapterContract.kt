@@ -1,6 +1,6 @@
 package com.dohyeok.gulpgulp.view.calendar.adapter
 
-import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkRecord
 
 interface CalendarDetailAdapterContract {
     interface View {
@@ -9,10 +9,10 @@ interface CalendarDetailAdapterContract {
     }
 
     interface Model {
-        var drinkData: ArrayList<Drink>
+        var recordData: ArrayList<DrinkRecord>
 
-        fun updateDrinkData(loadDrinks: List<Drink>)
+        fun updateDrinkData(loadDrinks: List<DrinkRecord>)
         fun removeItem(position: Int)
-        fun restoreItem(item: Drink, position: Int)
+        fun restoreItem(item: DrinkRecord, position: Int)
     }
 }
