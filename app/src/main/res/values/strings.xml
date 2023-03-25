@@ -6,4 +6,17 @@
     <!-- Preference -->
     <string name="preference_alert_title">알림</string>
     <string name="preference_drink_title">음료 관리</string>
+
+    <!-- EditDrink -->
+    <string name="editdrink_exist_title">만들어진 음료</string>
+    <string name="editdrink_make_title">새로운 음료 만들기</string>
+
+    <!-- EditDrink BottomSheetDialog -->
+    <string name="bottom_sheet_icon_title">아이콘</string>
+    <string name="bottom_sheet_drink_title">음료명</string>
+    <string name="bottom_sheet_drink_title_hint">물</string>
+    <string name="bottom_sheet_drink_amount">용량</string>
+    <string name="bottom_sheet_drink_amount_hint">250</string>
+    <string name="bottom_sheet_drink_unit">ml</string>
+    <string name="bottom_sheet_commit">만들기</string>
 </resources>

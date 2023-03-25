@@ -1,6 +1,7 @@
 package com.dohyeok.gulpgulp.view.setting
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.dohyeok.gulpgulp.databinding.SettingFragmentBinding
 import com.dohyeok.gulpgulp.view.base.BaseFragment
+import com.dohyeok.gulpgulp.view.editdrinkdetail.EditDrinkActivity
 import com.dohyeok.gulpgulp.view.setting.contract.SettingContract
 import com.dohyeok.gulpgulp.view.setting.contract.SettingPresenter
 
@@ -38,7 +40,7 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(), SettingContract.
         }
 
         binding.viewDrinkFrame.setOnClickListener {
-
+            startActivity(Intent(requireActivity(), EditDrinkActivity::class.java))
         }
     }
 

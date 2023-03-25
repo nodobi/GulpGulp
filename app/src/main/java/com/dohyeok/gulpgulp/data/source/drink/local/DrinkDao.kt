@@ -25,4 +25,7 @@ interface DrinkDao {
     @Delete
     fun deleteDrink(drink: Drink)
 
+    @Query("SELECT * FROM drinks")
+    fun loadDrinks(): List<Drink>
+
 }

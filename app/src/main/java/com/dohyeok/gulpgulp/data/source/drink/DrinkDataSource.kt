@@ -13,4 +13,6 @@ interface DrinkDataSource {
 
     suspend fun insertDrink(drink: Drink)
     suspend fun deleteDrink(drink: Drink)
+    suspend fun loadDrinks(): List<Drink>
+
 }

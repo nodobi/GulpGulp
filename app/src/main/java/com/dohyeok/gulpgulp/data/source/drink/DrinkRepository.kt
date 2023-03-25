@@ -30,4 +30,8 @@ object DrinkRepository : DrinkDataSource {
     override suspend fun deleteDrink(drink: Drink) {
         drinkLocalDataSource.deleteDrink(drink)
     }
+
+    override suspend fun loadDrinks(): List<Drink> {
+        return drinkLocalDataSource.loadDrinks()
+    }
 }
