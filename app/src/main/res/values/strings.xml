@@ -6,6 +6,11 @@
     <!-- Preference -->
     <string name="preference_alert_title">알림</string>
     <string name="preference_drink_title">음료 관리</string>
+    <string name="preference_drink_goal_title">목표 섭취량 관리</string>
+
+    <!-- Preference Goal BottomSheetDialog -->
+    <string name="goal_bottom_sheet_goal_title">목표 섭취량</string>
+    <string name="goal_bottom_sheet_goal_commit">설정 완료</string>
 
     <!-- EditDrink -->
     <string name="editdrink_exist_title">만들어진 음료</string>
@@ -19,4 +24,7 @@
     <string name="bottom_sheet_drink_amount_hint">250</string>
     <string name="bottom_sheet_drink_unit">ml</string>
     <string name="bottom_sheet_commit">만들기</string>
+
+    <!-- Unit -->
+    <string name="unit_ml">%dml</string>
 </resources>
