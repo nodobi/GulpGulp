@@ -1,7 +1,5 @@
 package com.dohyeok.gulpgulp.view.home.contract
 
-import android.annotation.SuppressLint
-import com.dohyeok.gulpgulp.R
 import com.dohyeok.gulpgulp.data.Drink
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
@@ -29,33 +27,12 @@ class HomePresenter constructor(
         }
     }
 
-    @SuppressLint("ResourceType")
     override fun updateDrinkData() {
-        val tempDrinkData: ArrayList<Drink> = arrayListOf()
-        tempDrinkData.add(
-            Drink(
-                R.drawable.ic_bottle_24dp,
-                "물",
-                250
-            )
-        )
-        tempDrinkData.add(
-            Drink(
-                R.drawable.ic_bottle_24dp,
-                "커피",
-                250
-            )
-        )
-        tempDrinkData.add(
-            Drink(
-                R.drawable.ic_bottle_24dp,
-                "녹차",
-                250
-            )
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            adapterModel.updateDrinkList(drinkRepository.loadDrinks())
+            adapterView.notifyDataUpdate()
+        }
 
-        adapterModel.updateDrinkList(tempDrinkData.toList())
-        adapterView.notifyDataUpdate()
     }
 
 }
