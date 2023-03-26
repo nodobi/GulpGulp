@@ -2,6 +2,7 @@ package com.dohyeok.gulpgulp.data.source.drink.local
 
 import androidx.room.*
 import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkGoal
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import java.time.LocalDate
 
@@ -31,4 +32,9 @@ interface DrinkDao {
     @Query("SELECT SUM(amount) FROM drink_records WHERE date = :date")
     fun loadTodayDrinkAmount(date: LocalDate): Int
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertDrinkGoal(drinkGoal: DrinkGoal)
+
+    @Query("SELECT * FROM drink_goals WHERE date = :date")
+    fun loadDrinkGoal(date: LocalDate) : DrinkGoal?
 }

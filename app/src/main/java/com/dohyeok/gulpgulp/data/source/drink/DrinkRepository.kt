@@ -1,6 +1,7 @@
 package com.dohyeok.gulpgulp.data.source.drink
 
 import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkGoal
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkLocalDataSource
 import java.time.LocalDate
@@ -37,5 +38,13 @@ object DrinkRepository : DrinkDataSource {
 
     override suspend fun loadTodayDrinkAmount(): Int {
         return drinkLocalDataSource.loadTodayDrinkAmount()
+    }
+
+    override suspend fun insertDrinkGoal(drinkGoal: DrinkGoal) {
+        return drinkLocalDataSource.insertDrinkGoal(drinkGoal)
+    }
+
+    override suspend fun loadDrinkGoal(date: LocalDate): DrinkGoal? {
+        return drinkLocalDataSource.loadDrinkGoal(date)
     }
 }

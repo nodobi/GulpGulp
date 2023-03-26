@@ -1,6 +1,7 @@
 package com.dohyeok.gulpgulp.data.source.drink
 
 import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkGoal
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import java.time.LocalDate
 
@@ -16,4 +17,8 @@ interface DrinkDataSource {
     suspend fun loadDrinks(): List<Drink>
 
     suspend fun loadTodayDrinkAmount(): Int
+
+    suspend fun insertDrinkGoal(drinkGoal: DrinkGoal)
+    suspend fun loadDrinkGoal(date: LocalDate) : DrinkGoal?
+
 }

@@ -3,11 +3,12 @@ package com.dohyeok.gulpgulp.data.source.drink.local
 import android.content.Context
 import androidx.room.*
 import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkGoal
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.converter.LocalDateConverter
 import com.dohyeok.gulpgulp.data.converter.LocalTimeConverter
 
-@Database(entities = [Drink::class, DrinkRecord::class], version = 1)
+@Database(entities = [Drink::class, DrinkRecord::class, DrinkGoal::class], version = 2)
 @TypeConverters(LocalDateConverter::class, LocalTimeConverter::class)
 abstract class DrinkDatabase : RoomDatabase() {
     abstract fun drinkDao(): DrinkDao

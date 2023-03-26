@@ -1,6 +1,7 @@
 package com.dohyeok.gulpgulp.data.source.drink.local
 
 import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkGoal
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkDataSource
 import kotlinx.coroutines.Dispatchers
@@ -40,5 +41,13 @@ object DrinkLocalDataSource : DrinkDataSource {
 
     override suspend fun loadTodayDrinkAmount(): Int = withContext(Dispatchers.IO) {
         drinkDao.loadTodayDrinkAmount(LocalDate.now())
+    }
+
+    override suspend fun insertDrinkGoal(drinkGoal: DrinkGoal) = withContext(Dispatchers.IO) {
+        drinkDao.insertDrinkGoal(drinkGoal)
+    }
+
+    override suspend fun loadDrinkGoal(date: LocalDate): DrinkGoal? = withContext(Dispatchers.IO) {
+        drinkDao.loadDrinkGoal(date)
     }
 }
