@@ -15,4 +15,5 @@ interface DrinkDataSource {
     suspend fun deleteDrink(drink: Drink)
     suspend fun loadDrinks(): List<Drink>
 
+    suspend fun loadTodayDrinkAmount(): Int
 }

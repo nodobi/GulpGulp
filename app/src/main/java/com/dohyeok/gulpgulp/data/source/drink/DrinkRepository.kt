@@ -34,4 +34,8 @@ object DrinkRepository : DrinkDataSource {
     override suspend fun loadDrinks(): List<Drink> {
         return drinkLocalDataSource.loadDrinks()
     }
+
+    override suspend fun loadTodayDrinkAmount(): Int {
+        return drinkLocalDataSource.loadTodayDrinkAmount()
+    }
 }

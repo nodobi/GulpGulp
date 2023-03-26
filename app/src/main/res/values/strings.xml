@@ -27,4 +27,5 @@
 
     <!-- Unit -->
     <string name="unit_ml">%dml</string>
+    <string name="unit_percent">%d%%</string>
 </resources>

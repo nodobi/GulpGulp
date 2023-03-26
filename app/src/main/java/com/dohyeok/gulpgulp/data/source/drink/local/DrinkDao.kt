@@ -28,4 +28,7 @@ interface DrinkDao {
     @Query("SELECT * FROM drinks")
     fun loadDrinks(): List<Drink>
 
+    @Query("SELECT SUM(amount) FROM drink_records WHERE date = :date")
+    fun loadTodayDrinkAmount(date: LocalDate): Int
+
 }
