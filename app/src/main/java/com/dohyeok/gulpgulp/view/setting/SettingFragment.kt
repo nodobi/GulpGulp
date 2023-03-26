@@ -1,7 +1,6 @@
 package com.dohyeok.gulpgulp.view.setting
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +11,7 @@ import android.widget.NumberPicker
 import com.dohyeok.gulpgulp.R
 import com.dohyeok.gulpgulp.databinding.SettingFragmentBinding
 import com.dohyeok.gulpgulp.databinding.SettingGoalBottomDialogBinding
+import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.view.base.BaseFragment
 import com.dohyeok.gulpgulp.view.editdrinkdetail.EditDrinkActivity
 import com.dohyeok.gulpgulp.view.setting.contract.SettingContract
@@ -22,12 +22,6 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(), SettingContract.
     override lateinit var presenter: SettingPresenter
     private lateinit var goalBottomBinding: SettingGoalBottomDialogBinding
     private lateinit var goalBottomDialog: BottomSheetDialog
-
-    companion object {
-        const val PREFERENCE_NAME = "PREFERENCE_NAME"
-        const val PREFERENCE_KEY_ALERT = "PREFERENCE_KEY_ALERT"
-        const val PREFERENCE_KEY_GOAL = "PREFERENCE_KEY_GOAL"
-    }
 
     override fun getFragmentBinding(
         inflater: LayoutInflater, container: ViewGroup?
@@ -40,12 +34,14 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(), SettingContract.
             SettingGoalBottomDialogBinding.inflate(layoutInflater, binding.root, false)
         presenter = SettingPresenter(
             this,
-            requireContext().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+            SPUtils(requireContext())
         )
+        goalBottomDialog = initGoalBottomSheetDialog()
+
 
         binding.apply {
             switchAlert.apply {
-                changeAlertVisibility(presenter.getPreferenceValue(PREFERENCE_KEY_ALERT) as Boolean)
+                isChecked = presenter.getAlarmEnabled()
                 setOnCheckedChangeListener { _, isChecked ->
                     presenter.onAlertChanged.invoke(isChecked)
                 }
@@ -59,9 +55,7 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(), SettingContract.
         }
 
         changeDisplayDrinkGoal(presenter.getDrinkGoal())
-
-        goalBottomDialog = initGoalBottomSheetDialog()
-
+        changeAlertVisibility(presenter.getAlarmEnabled())
     }
 
     override fun changeAlertVisibility(isVisible: Boolean) {

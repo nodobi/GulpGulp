@@ -19,6 +19,5 @@ interface HomeContract {
         fun updateDrinkData()
         fun updateTodayDrinkAmount()
         fun updateProgress()
-        fun getPreferenceValue(key: String): Any?
     }
 }

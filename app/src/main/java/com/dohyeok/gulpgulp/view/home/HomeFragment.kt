@@ -1,6 +1,5 @@
 package com.dohyeok.gulpgulp.view.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,11 @@ import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkLocalDataSource
 import com.dohyeok.gulpgulp.databinding.HomeFragmentBinding
+import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.view.base.BaseFragment
 import com.dohyeok.gulpgulp.view.home.adapter.HomeDrinkAdapter
 import com.dohyeok.gulpgulp.view.home.contract.HomeContract
 import com.dohyeok.gulpgulp.view.home.contract.HomePresenter
-import com.dohyeok.gulpgulp.view.setting.SettingFragment
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>(), HomeContract.View {
     override lateinit var presenter: HomeContract.Presenter
@@ -40,10 +39,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(), HomeContract.View {
                     drinkDao = DrinkDatabase.getInstance(requireContext()).drinkDao()
                 }
             },
-            requireContext().getSharedPreferences(
-                SettingFragment.PREFERENCE_NAME,
-                Context.MODE_PRIVATE
-            )
+            SPUtils(requireContext())
         )
 
         binding.recyclerHomeDrink.apply {

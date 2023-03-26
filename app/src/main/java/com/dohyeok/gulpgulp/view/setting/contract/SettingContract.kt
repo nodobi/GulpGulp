@@ -17,7 +17,6 @@ interface SettingContract {
         var onGoalCommitBtnClick: (Int) -> Unit
 
         fun getDrinkGoal(): Int
-        fun putPreferenceValue(key: String, value: Any)
-        fun getPreferenceValue(key: String): Any?
+        fun getAlarmEnabled(): Boolean
     }
 }
