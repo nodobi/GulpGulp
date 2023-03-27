@@ -1,9 +1,15 @@
 package com.dohyeok.gulpgulp.view.setting.contract
 
+import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.util.SPUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class SettingPresenter constructor(
     override var view: SettingContract.View,
+    override var drinkRepository: DrinkRepository,
     private var spUtils: SPUtils
 ) : SettingContract.Presenter {
     override var goalNumberPickerNumberMultiply: Int = 50
@@ -28,5 +34,15 @@ class SettingPresenter constructor(
     private fun onGoalCommitBtnClickListener(amount: Int) {
         view.changeDisplayDrinkGoal(amount * goalNumberPickerNumberMultiply)
         spUtils.put(SPUtils.PREFERENCE_KEY_GOAL, amount * goalNumberPickerNumberMultiply, false)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            drinkRepository.apply {
+                updateDrinkGoal(
+                    date = LocalDate.now(),
+                    amount = amount * goalNumberPickerNumberMultiply,
+                    isComplete = loadDrinkAmount() >= amount * goalNumberPickerNumberMultiply
+                )
+            }
+        }
     }
 }

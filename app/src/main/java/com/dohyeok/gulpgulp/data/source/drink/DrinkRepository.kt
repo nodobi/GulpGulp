@@ -36,8 +36,8 @@ object DrinkRepository : DrinkDataSource {
         return drinkLocalDataSource.loadDrinks()
     }
 
-    override suspend fun loadTodayDrinkAmount(): Int {
-        return drinkLocalDataSource.loadTodayDrinkAmount()
+    override suspend fun loadDrinkAmount(date: LocalDate): Int {
+        return drinkLocalDataSource.loadDrinkAmount(date)
     }
 
     override suspend fun insertDrinkGoal(drinkGoal: DrinkGoal) {
@@ -46,5 +46,17 @@ object DrinkRepository : DrinkDataSource {
 
     override suspend fun loadDrinkGoal(date: LocalDate): DrinkGoal? {
         return drinkLocalDataSource.loadDrinkGoal(date)
+    }
+
+    override suspend fun updateDrinkGoal(date: LocalDate, isComplete: Boolean) {
+        drinkLocalDataSource.updateDrinkGoal(date, isComplete)
+    }
+
+    override suspend fun updateDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) {
+        drinkLocalDataSource.updateDrinkGoal(date, amount, isComplete)
+    }
+
+    override suspend fun upsertDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) {
+        drinkLocalDataSource.upsertDrinkGoal(date, amount, isComplete)
     }
 }

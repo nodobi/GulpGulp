@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.NumberPicker
 import com.dohyeok.gulpgulp.R
+import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
+import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
+import com.dohyeok.gulpgulp.data.source.drink.local.DrinkLocalDataSource
 import com.dohyeok.gulpgulp.databinding.SettingFragmentBinding
 import com.dohyeok.gulpgulp.databinding.SettingGoalBottomDialogBinding
 import com.dohyeok.gulpgulp.util.SPUtils
@@ -34,6 +37,11 @@ class SettingFragment : BaseFragment<SettingFragmentBinding>(), SettingContract.
             SettingGoalBottomDialogBinding.inflate(layoutInflater, binding.root, false)
         presenter = SettingPresenter(
             this,
+            DrinkRepository.apply {
+                drinkLocalDataSource = DrinkLocalDataSource.apply {
+                    drinkDao = DrinkDatabase.getInstance(requireContext()).drinkDao()
+                }
+            },
             SPUtils(requireContext())
         )
         goalBottomDialog = initGoalBottomSheetDialog()

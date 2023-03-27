@@ -30,11 +30,26 @@ interface DrinkDao {
     fun loadDrinks(): List<Drink>
 
     @Query("SELECT SUM(amount) FROM drink_records WHERE date = :date")
-    fun loadTodayDrinkAmount(date: LocalDate): Int
+    fun loadDrinkAmount(date: LocalDate): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDrinkGoal(drinkGoal: DrinkGoal)
 
     @Query("SELECT * FROM drink_goals WHERE date = :date")
-    fun loadDrinkGoal(date: LocalDate) : DrinkGoal?
+    fun loadDrinkGoal(date: LocalDate): DrinkGoal?
+
+    @Query("UPDATE drink_goals SET isComplete = :isComplete WHERE date = :date")
+    fun updateDrinkGoal(date: LocalDate, isComplete: Boolean)
+
+    @Query("UPDATE drink_goals SET amount = :amount, isComplete = :isComplete WHERE date = :date")
+    fun updateDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean)
+
+    @Transaction
+    fun upsertDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) {
+        if(loadDrinkGoal(date) == null) {
+            insertDrinkGoal(DrinkGoal(date, amount, isComplete))
+        } else {
+            updateDrinkGoal(date, amount, isComplete)
+        }
+    }
 }

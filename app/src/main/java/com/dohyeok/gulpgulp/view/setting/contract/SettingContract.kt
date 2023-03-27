@@ -1,5 +1,6 @@
 package com.dohyeok.gulpgulp.view.setting.contract
 
+import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.view.base.BaseContract
 
 interface SettingContract {
@@ -12,6 +13,7 @@ interface SettingContract {
 
     interface Presenter : BaseContract.Presenter<View> {
         var goalNumberPickerNumberMultiply: Int
+        var drinkRepository: DrinkRepository
 
         var onAlertChanged: (Boolean) -> Unit
         var onGoalCommitBtnClick: (Int) -> Unit

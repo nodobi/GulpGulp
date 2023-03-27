@@ -28,6 +28,14 @@ class HomePresenter constructor(
             drinkRepository.insertDrinkRecord(DrinkRecord(drink, LocalDate.now(), LocalTime.now()))
             updateTodayDrinkAmount()
             updateProgress()
+
+            drinkRepository.apply {
+                upsertDrinkGoal(
+                    LocalDate.now(),
+                    spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000),
+                    loadDrinkAmount() >= spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
+                )
+            }
         }
     }
 
@@ -41,16 +49,15 @@ class HomePresenter constructor(
 
     override fun updateTodayDrinkAmount() {
         CoroutineScope(Dispatchers.Main).launch {
-            view.changeTodayDrinkAmount(drinkRepository.loadTodayDrinkAmount())
+            view.changeTodayDrinkAmount(drinkRepository.loadDrinkAmount())
         }
     }
 
     override fun updateProgress() {
         CoroutineScope(Dispatchers.Main).launch {
             view.changeProgressPercent(
-                (drinkRepository.loadTodayDrinkAmount()
-                    .toFloat() * 100 / spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
-                        ).toInt()
+                (drinkRepository.loadDrinkAmount()
+                    .toFloat() * 100 / spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)).toInt()
             )
         }
     }

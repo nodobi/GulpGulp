@@ -39,8 +39,8 @@ object DrinkLocalDataSource : DrinkDataSource {
         drinkDao.loadDrinks()
     }
 
-    override suspend fun loadTodayDrinkAmount(): Int = withContext(Dispatchers.IO) {
-        drinkDao.loadTodayDrinkAmount(LocalDate.now())
+    override suspend fun loadDrinkAmount(date: LocalDate): Int = withContext(Dispatchers.IO) {
+        drinkDao.loadDrinkAmount(date)
     }
 
     override suspend fun insertDrinkGoal(drinkGoal: DrinkGoal) = withContext(Dispatchers.IO) {
@@ -49,5 +49,17 @@ object DrinkLocalDataSource : DrinkDataSource {
 
     override suspend fun loadDrinkGoal(date: LocalDate): DrinkGoal? = withContext(Dispatchers.IO) {
         drinkDao.loadDrinkGoal(date)
+    }
+
+    override suspend fun updateDrinkGoal(date: LocalDate, isComplete: Boolean) = withContext(Dispatchers.IO) {
+        drinkDao.updateDrinkGoal(date, isComplete)
+    }
+
+    override suspend fun updateDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) {
+        drinkDao.updateDrinkGoal(date, amount, isComplete)
+    }
+
+    override suspend fun upsertDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) = withContext(Dispatchers.IO) {
+        drinkDao.upsertDrinkGoal(date, amount, isComplete)
     }
 }
