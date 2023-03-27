@@ -3,6 +3,14 @@
     <string name="toolbar_option">option</string>
     <string name="toolbar_title_empty"> </string>
 
+    <!-- CalendarFragment -->
+    <string name="calendar_edit_btn">누락된 음료 추가</string>
+    <string name="calendar_detail_no_amount">섭취량 없음</string>
+    <string name="calendar_detail_amount">총 섭취량: %dml</string>
+    <string name="calendar_delete_dialog_title">정말 지우시겠습니까?</string>
+    <string name="calendar_delete_dialog_positive">예</string>
+    <string name="calendar_delete_dialog_negative">아니요</string>
+
     <!-- Preference -->
     <string name="preference_alert_title">알림</string>
     <string name="preference_drink_title">음료 관리</string>
@@ -28,4 +36,5 @@
     <!-- Unit -->
     <string name="unit_ml">%dml</string>
     <string name="unit_percent">%d%%</string>
+
 </resources>

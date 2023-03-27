@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_calendar_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="progress_detail_goal, recycler_calendar_detail_drink_list" />
+
     <ProgressBar
         android:id="@+id/progress_goal"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -25,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="100%"
         android:textColor="#FFFFFF"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -37,12 +43,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_weight="1"
         android:src="@drawable/ic_back_24dp"
-        app:layout_constraintEnd_toStartOf="@id/text_calendar_date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_goal" />
+        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
+        app:layout_constraintTop_toTopOf="@id/text_calendar_date"
+        app:layout_constraintBottom_toBottomOf="@id/text_calendar_date" />
 
     <TextView
         android:id="@+id/text_calendar_date"
@@ -51,27 +55,24 @@
         android:layout_marginTop="50dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="0000년 00월"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
+        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
         app:layout_constraintTop_toBottomOf="@id/progress_goal" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_weight="1"
         android:src="@drawable/ic_front_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/text_calendar_date"
-        app:layout_constraintTop_toBottomOf="@id/progress_goal" />
+        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
+        app:layout_constraintTop_toTopOf="@id/text_calendar_date"
+        app:layout_constraintBottom_toBottomOf="@id/text_calendar_date" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_calendar"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/calendar_margin_left"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/calendar_margin_right"
         android:background="@color/blue_200"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,11 +84,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:text="0000년 0월 0일"
-        app:layout_constraintTop_toBottomOf="@id/recycler_calendar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
+        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
+        app:layout_constraintTop_toBottomOf="@id/recycler_calendar" />
 
-    <include layout="@layout/calendar_include_detail" />
+    <TextView
+        android:id="@+id/text_calendar_detail_drink_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progress_detail_goal" />
+
+    <ProgressBar
+        android:id="@+id/progress_detail_goal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:max="100"
+        android:progress="30"
+        android:progressBackgroundTint="@color/blue_200"
+        android:progressDrawable="@drawable/progressbar_horizontal"
+        android:progressTint="@color/blue_500"
+        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
+        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
+        app:layout_constraintTop_toBottomOf="@id/text_calendar_detail_date" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_calendar_detail_drink_list"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="@id/progress_detail_goal"
+        app:layout_constraintStart_toStartOf="@id/progress_detail_goal"
+        app:layout_constraintTop_toBottomOf="@id/text_calendar_detail_drink_amount" />
+
+    <Button
+        android:id="@+id/btn_calendar_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:text="@string/calendar_edit_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_calendar_detail_drink_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

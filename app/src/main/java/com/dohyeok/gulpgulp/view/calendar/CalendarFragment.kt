@@ -8,11 +8,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dohyeok.gulpgulp.R
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkLocalDataSource
 import com.dohyeok.gulpgulp.databinding.CalendarFragmentBinding
-import com.dohyeok.gulpgulp.databinding.CalendarIncludeDetailBinding
+import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.util.yearMonthDateKrFormat
 import com.dohyeok.gulpgulp.util.yearMonthKrFormat
 import com.dohyeok.gulpgulp.view.base.BaseFragment
@@ -23,24 +24,15 @@ import com.dohyeok.gulpgulp.view.calendar.contract.CalendarPresenter
 import java.time.LocalDate
 
 class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContract.View {
-    private val binding_include: CalendarIncludeDetailBinding get() = _binding_include!!
-    private var _binding_include: CalendarIncludeDetailBinding? = null
     private lateinit var adapter: CalendarAdapter
     private lateinit var detailAdapter: CalendarDetailAdapter
     lateinit var presenter: CalendarPresenter
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding_include = null
-    }
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): CalendarFragmentBinding {
-        return CalendarFragmentBinding.inflate(layoutInflater, container, false).also {
-            _binding_include = CalendarIncludeDetailBinding.bind(it.root)
-        }
+        return CalendarFragmentBinding.inflate(layoutInflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,24 +48,16 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
                 drinkLocalDataSource = DrinkLocalDataSource.apply {
                     drinkDao = DrinkDatabase.getInstance(requireContext()).drinkDao()
                 }
-            })
-        presenter.updateDetailData()
+            },
+            SPUtils(requireContext())
+        )
 
-        binding.recyclerCalendar.apply {
-            adapter = this@CalendarFragment.adapter
-            layoutManager = GridLayoutManager(requireContext(), 7)
-        }
+        initRecyclers()
 
-        binding_include.recyclerCalendarDate.apply {
-            adapter = this@CalendarFragment.detailAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        }
-
-        presenter.updateAdapterData()
         presenter.updateDate()
+        presenter.updateProgress()
+        presenter.updateDetails()
 
-        binding.progressGoal.setProgress(50, false)
     }
 
     override fun updateCalendarDates(date: LocalDate) {
@@ -83,19 +67,63 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
 
     override fun attachItemTouchHelper(itemTouchCallback: ItemTouchCallback) {
         val helper = ItemTouchHelper(itemTouchCallback)
-        helper.attachToRecyclerView(binding_include.recyclerCalendarDate)
+        helper.attachToRecyclerView(binding.recyclerCalendarDetailDrinkList)
     }
 
     override fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit)) {
         AlertDialog.Builder(requireContext())
-            .setTitle("정말 지우시겠습니까 ?")
+            .setTitle(resources.getString(R.string.calendar_delete_dialog_title))
             .setPositiveButton(
-                "ok"
-            ) { dialog, which -> onPositive.invoke(Unit) }
+                resources.getString(R.string.calendar_delete_dialog_positive)
+            ) { _, _ -> onPositive.invoke(Unit) }
             .setNegativeButton(
-                "cancel"
-            ) { dialog, which -> onDismiss.invoke(Unit) }
+                resources.getString(R.string.calendar_delete_dialog_negative)
+            ) { _, _ -> onDismiss.invoke(Unit) }
             .create()
             .show()
+    }
+
+    override fun changeProgressPercent(percent: Int) {
+        binding.textGoalPercent.text = resources.getString(R.string.unit_percent, percent)
+        binding.progressGoal.progress = percent
+    }
+
+    override fun changeDetailProgressPercent(percent: Int) {
+        binding.progressDetailGoal.progress = percent
+    }
+
+    override fun changeDetailDrinkAmount(amount: Int) {
+        if (amount == 0) {
+            binding.textCalendarDetailDrinkAmount.text =
+                resources.getString(R.string.calendar_detail_no_amount)
+            changeDetailGroupVisibility(false)
+        } else {
+            binding.textCalendarDetailDrinkAmount.text =
+                resources.getString(R.string.calendar_detail_amount, amount)
+            changeDetailGroupVisibility(true)
+        }
+    }
+
+    private fun changeDetailGroupVisibility(isVisible: Boolean) {
+        if (isVisible) {
+            binding.groupCalendarDetail.visibility = View.VISIBLE
+        } else {
+            binding.groupCalendarDetail.visibility = View.GONE
+        }
+    }
+
+    private fun initRecyclers() {
+        binding.recyclerCalendar.apply {
+            adapter = this@CalendarFragment.adapter
+            layoutManager = GridLayoutManager(requireContext(), 7)
+        }
+
+        binding.recyclerCalendarDetailDrinkList.apply {
+            adapter = this@CalendarFragment.detailAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+        presenter.updateAdapterData()
+        presenter.updateDetailAdapterData()
     }
 }

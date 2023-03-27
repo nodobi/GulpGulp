@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.util.CalendarUtil
+import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapterContract
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapterContract
@@ -18,16 +19,16 @@ class CalendarPresenter constructor(
     override var adapterModel: CalendarAdapterContract.Model,
     override var detailAdapterView: CalendarDetailAdapterContract.View,
     override var detailAdapterModel: CalendarDetailAdapterContract.Model,
-    override var drinkRepository: DrinkRepository
+    override var drinkRepository: DrinkRepository,
+    private var spUtils: SPUtils
 ) : CalendarContract.Presenter {
-
     init {
         adapterModel.onDateClicked = { onDateClickListener(it) }
     }
 
     override var date: LocalDate = LocalDate.now()
 
-    fun updateAdapterData() {
+    override fun updateAdapterData() {
         adapterModel.updateSize(7, CalendarUtil.getCalendarWeekCnt(date))
         adapterModel.updateData(CalendarUtil.getDateList(date))
 
@@ -36,17 +37,19 @@ class CalendarPresenter constructor(
                 val pos: Int = viewHolder.adapterPosition
                 val item: DrinkRecord = detailAdapterModel.recordData[pos]
                 detailAdapterView.notifyItemDraw(pos)
-                val onPositive: (Unit) -> Unit = {
-                    detailAdapterModel.removeItem(pos)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        drinkRepository.deleteDrinkRecord(item)
+
+                view.showDialog(
+                    onPositive = {
+                        detailAdapterModel.removeItem(pos)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            drinkRepository.deleteDrinkRecord(item)
+                            updateDetails()
+                        }
+                    },
+                    onDismiss = {
+
                     }
-                }
-                val onNegative: (Unit) -> Unit = {
-
-                }
-
-                view.showDialog(onPositive, onNegative)
+                )
             }
         })
     }
@@ -55,16 +58,49 @@ class CalendarPresenter constructor(
         view.updateCalendarDates(date)
     }
 
-    override fun updateDetailData() {
+    override fun updateDetailAdapterData() {
         CoroutineScope(Dispatchers.Main).launch {
             detailAdapterModel.updateDrinkData(drinkRepository.loadDrinkRecords(date))
             detailAdapterView.notifyDataChanged()
         }
     }
 
+    override fun updateProgress() {
+        CoroutineScope(Dispatchers.Main).launch {
+            view.changeProgressPercent(
+                (drinkRepository.loadDrinkAmount()
+                    .toFloat() / spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000) * 100).toInt()
+            )
+        }
+    }
+
+    override fun updateDetails() {
+        updateDetailProgresses()
+        updateDetailDrinkAmount()
+    }
+
+    private fun updateDetailProgresses() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val goal = drinkRepository.loadDrinkGoal(date)?.amount
+                ?: spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
+            view.changeDetailProgressPercent(
+                (drinkRepository.loadDrinkAmount(date) * 100f / goal).toInt()
+            )
+        }
+    }
+
+    private fun updateDetailDrinkAmount() {
+        CoroutineScope(Dispatchers.Main).launch {
+            view.changeDetailDrinkAmount(
+                drinkRepository.loadDrinkAmount(date)
+            )
+        }
+    }
+
     private fun onDateClickListener(date: LocalDate) {
         this.date = date
         updateDate()
-        updateDetailData()
+        updateDetailAdapterData()
+        updateDetails()
     }
 }

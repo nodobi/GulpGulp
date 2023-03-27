@@ -12,6 +12,9 @@ interface CalendarContract {
         fun updateCalendarDates(date: LocalDate)
         fun attachItemTouchHelper(itemTouchCallback: ItemTouchCallback)
         fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit))
+        fun changeProgressPercent(percent: Int)
+        fun changeDetailProgressPercent(percent: Int)
+        fun changeDetailDrinkAmount(amount: Int)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -22,7 +25,10 @@ interface CalendarContract {
         var drinkRepository: DrinkRepository
         var date: LocalDate
 
-        fun updateDetailData()
+        fun updateDetailAdapterData()
         fun updateDate()
+        fun updateAdapterData()
+        fun updateProgress()
+        fun updateDetails()
     }
 }
