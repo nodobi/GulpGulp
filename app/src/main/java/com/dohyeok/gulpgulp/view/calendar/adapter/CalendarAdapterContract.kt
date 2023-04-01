@@ -8,9 +8,10 @@ interface CalendarAdapterContract {
     }
 
     interface Model {
+        var currentDate: LocalDate
+
         fun updateData(data: List<LocalDate>)
         fun updateSize(column: Int, row: Int)
-
         var onDateClicked: ((LocalDate) -> Unit)
     }
 }

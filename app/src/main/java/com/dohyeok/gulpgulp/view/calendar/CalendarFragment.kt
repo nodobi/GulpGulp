@@ -60,8 +60,11 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
 
     }
 
-    override fun updateCalendarDates(date: LocalDate) {
+    override fun updateCalendarDate(date: LocalDate) {
         binding.textCalendarDate.text = date.yearMonthKrFormat
+    }
+
+    override fun updateCalendarDetailDate(date: LocalDate) {
         binding.textCalendarDetailDate.text = date.yearMonthDateKrFormat
     }
 
@@ -104,6 +107,11 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
     }
 
+    override fun setCalendarEvents(onPrev: (View) -> Unit, onNext: (View) -> Unit) {
+        binding.imageCalendarPrev.setOnClickListener(onPrev)
+        binding.imageCalendarNext.setOnClickListener(onNext)
+    }
+
     private fun changeDetailGroupVisibility(isVisible: Boolean) {
         if (isVisible) {
             binding.groupCalendarDetail.visibility = View.VISIBLE
@@ -116,6 +124,7 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         binding.recyclerCalendar.apply {
             adapter = this@CalendarFragment.adapter
             layoutManager = GridLayoutManager(requireContext(), 7)
+
         }
 
         binding.recyclerCalendarDetailDrinkList.apply {
@@ -125,5 +134,7 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
         presenter.updateAdapterData()
         presenter.updateDetailAdapterData()
+
+        presenter.setAdapterEvents()
     }
 }

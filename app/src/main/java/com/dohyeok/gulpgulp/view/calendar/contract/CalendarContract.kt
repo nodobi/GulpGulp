@@ -9,12 +9,14 @@ import java.time.LocalDate
 
 interface CalendarContract {
     interface View : BaseContract.View {
-        fun updateCalendarDates(date: LocalDate)
+        fun updateCalendarDate(date: LocalDate)
         fun attachItemTouchHelper(itemTouchCallback: ItemTouchCallback)
         fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit))
         fun changeProgressPercent(percent: Int)
         fun changeDetailProgressPercent(percent: Int)
         fun changeDetailDrinkAmount(amount: Int)
+        fun setCalendarEvents(onPrev: (android.view.View) -> Unit, onNext: (android.view.View) -> Unit)
+        fun updateCalendarDetailDate(date: LocalDate)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -23,12 +25,14 @@ interface CalendarContract {
         var detailAdapterView: CalendarDetailAdapterContract.View
         var detailAdapterModel: CalendarDetailAdapterContract.Model
         var drinkRepository: DrinkRepository
-        var date: LocalDate
+
+        fun updateAdapterData()
+        fun setAdapterEvents()
 
         fun updateDetailAdapterData()
-        fun updateDate()
-        fun updateAdapterData()
-        fun updateProgress()
         fun updateDetails()
+
+        fun updateDate()
+        fun updateProgress()
     }
 }

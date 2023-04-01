@@ -6,11 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.databinding.CalendarDetailItemBinding
+import java.time.LocalDate
 
 class CalendarDetailAdapter(private val context: Context) :
     RecyclerView.Adapter<CalendarDetailViewHolder>(), CalendarDetailAdapterContract.View,
     CalendarDetailAdapterContract.Model {
+
     override var recordData: ArrayList<DrinkRecord> = arrayListOf()
+    override lateinit var currentDate: LocalDate
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarDetailViewHolder {
         return CalendarDetailViewHolder(
