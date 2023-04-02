@@ -3,11 +3,10 @@ package com.dohyeok.gulpgulp.view.calendar.contract
 import androidx.recyclerview.widget.RecyclerView
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
-import com.dohyeok.gulpgulp.util.CalendarUtil
 import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
-import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapterContract
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapterContract
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarPagerAdapterContract
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,15 +14,18 @@ import java.time.LocalDate
 
 class CalendarPresenter constructor(
     override var view: CalendarContract.View,
-    override var adapterView: CalendarAdapterContract.View,
-    override var adapterModel: CalendarAdapterContract.Model,
     override var detailAdapterView: CalendarDetailAdapterContract.View,
     override var detailAdapterModel: CalendarDetailAdapterContract.Model,
+    override var pagerAdapterView: CalendarPagerAdapterContract.View,
+    override var pagerAdapterModel: CalendarPagerAdapterContract.Model,
     override var drinkRepository: DrinkRepository,
     private var spUtils: SPUtils
 ) : CalendarContract.Presenter {
     init {
-        adapterModel.apply{
+        pagerAdapterModel.apply {
+            onCalendarPageChanged = {
+                onCalendarPageChangeListener(it)
+            }
             onDateClicked = {
                 onDateClickListener(it)
             }
@@ -31,15 +33,8 @@ class CalendarPresenter constructor(
         detailAdapterModel.currentDate = LocalDate.now()
     }
 
-    override fun updateAdapterData() {
-        adapterModel.updateSize(7, CalendarUtil.getCalendarWeekCnt(adapterModel.currentDate))
-        adapterModel.updateData(CalendarUtil.getDateList(adapterModel.currentDate))
-        adapterView.notifyAdapter()
-        updateDate()
-    }
-
     override fun updateDate() {
-        view.updateCalendarDate(adapterModel.currentDate)
+        view.updateCalendarDate(pagerAdapterModel.date)
         view.updateCalendarDetailDate(detailAdapterModel.currentDate)
     }
 
@@ -65,21 +60,9 @@ class CalendarPresenter constructor(
     }
 
     override fun setAdapterEvents() {
-        view.setCalendarEvents(onPrev = {
-            adapterModel.apply {
-                currentDate = currentDate.minusMonths(1)
-            }
-            updateAdapterData()
-        }, onNext = {
-            adapterModel.apply {
-                currentDate = currentDate.plusMonths(1)
-            }
-            updateAdapterData()
-        })
-
         view.attachItemTouchHelper(object : ItemTouchCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val pos: Int = viewHolder.adapterPosition
+                val pos: Int = viewHolder.bindingAdapterPosition
                 val item: DrinkRecord = detailAdapterModel.recordData[pos]
                 detailAdapterView.notifyItemDraw(pos)
 
@@ -119,5 +102,9 @@ class CalendarPresenter constructor(
         view.updateCalendarDetailDate(date)
         updateDetailAdapterData()
         updateDetails()
+    }
+
+    private fun onCalendarPageChangeListener(date: LocalDate) {
+        view.updateCalendarDate(date)
     }
 }

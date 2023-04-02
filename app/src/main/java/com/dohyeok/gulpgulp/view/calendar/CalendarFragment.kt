@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dohyeok.gulpgulp.R
@@ -17,15 +16,15 @@ import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.util.yearMonthDateKrFormat
 import com.dohyeok.gulpgulp.util.yearMonthKrFormat
 import com.dohyeok.gulpgulp.view.base.BaseFragment
-import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapter
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapter
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarPagerAdapter
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarContract
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarPresenter
 import java.time.LocalDate
 
 class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContract.View {
-    private lateinit var adapter: CalendarAdapter
     private lateinit var detailAdapter: CalendarDetailAdapter
+    private lateinit var pagerAdapter: CalendarPagerAdapter
     lateinit var presenter: CalendarPresenter
 
     override fun getFragmentBinding(
@@ -36,14 +35,16 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = CalendarAdapter(requireContext())
         detailAdapter = CalendarDetailAdapter(requireContext())
+        pagerAdapter = CalendarPagerAdapter(requireContext()).apply {
+            offset = 50
+        }
         presenter = CalendarPresenter(
             this,
-            adapter,
-            adapter,
             detailAdapter,
             detailAdapter,
+            pagerAdapter,
+            pagerAdapter,
             DrinkRepository.apply {
                 drinkLocalDataSource = DrinkLocalDataSource.apply {
                     drinkDao = DrinkDatabase.getInstance(requireContext()).drinkDao()
@@ -53,6 +54,7 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         )
 
         initRecyclers()
+        setCalendarEvents()
 
         presenter.updateDate()
         presenter.updateProgress()
@@ -107,9 +109,17 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
     }
 
-    override fun setCalendarEvents(onPrev: (View) -> Unit, onNext: (View) -> Unit) {
-        binding.imageCalendarPrev.setOnClickListener(onPrev)
-        binding.imageCalendarNext.setOnClickListener(onNext)
+    private fun setCalendarEvents() {
+        binding.imageCalendarNext.setOnClickListener {
+            binding.pagerCalendar.apply {
+                setCurrentItem(currentItem + 1, true)
+            }
+        }
+        binding.imageCalendarPrev.setOnClickListener {
+            binding.pagerCalendar.apply {
+                setCurrentItem(currentItem - 1, true)
+            }
+        }
     }
 
     private fun changeDetailGroupVisibility(isVisible: Boolean) {
@@ -121,20 +131,17 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
     }
 
     private fun initRecyclers() {
-        binding.recyclerCalendar.apply {
-            adapter = this@CalendarFragment.adapter
-            layoutManager = GridLayoutManager(requireContext(), 7)
-
+        binding.pagerCalendar.apply {
+            adapter = pagerAdapter
+            setCurrentItem(pagerAdapter.offset, false)
+            registerOnPageChangeCallback(pagerAdapter.PageChangeCallback())
         }
-
         binding.recyclerCalendarDetailDrinkList.apply {
             adapter = this@CalendarFragment.detailAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
-        presenter.updateAdapterData()
         presenter.updateDetailAdapterData()
-
         presenter.setAdapterEvents()
     }
 }
