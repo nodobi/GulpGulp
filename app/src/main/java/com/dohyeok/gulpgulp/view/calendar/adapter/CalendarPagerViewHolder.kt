@@ -1,46 +1,40 @@
 package com.dohyeok.gulpgulp.view.calendar.adapter
 
-import android.content.Context
-import android.view.Gravity
+import android.view.View
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dohyeok.gulpgulp.databinding.CalendarPagerItemBinding
-import com.dohyeok.gulpgulp.util.CalendarUtil
 import java.time.LocalDate
 
-class CalendarPagerViewHolder(private val binding: CalendarPagerItemBinding) :
+class CalendarPagerViewHolder(val binding: CalendarPagerItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun onBind(
-        context: Context,
-        date: LocalDate,
         data: List<LocalDate>,
-        parentWidth: Int,
-        parentHeight: Int,
-        onDateClicked: (LocalDate) -> Unit
+        selectedDate: LocalDate,
+        viewWidth: Int,
+        viewHeight: Int,
+        row: Int,
+        column: Int,
+        onDateClicked: (View, LocalDate) -> Unit
     ) {
-        val row = CalendarUtil.getCalendarWeekCnt(date)
-        val column = 7
-
         binding.gridCalendar.apply {
             layoutParams.apply {
                 columnCount = column
             }
         }
-
         for (i in 0 until (row * column)) {
-            val view = TextView(context).apply {
+            (binding.gridCalendar.getChildAt(i) as TextView).apply {
                 text = "${data[i].dayOfMonth}"
+                isSelected = (data[i] == selectedDate)
                 layoutParams = GridLayout.LayoutParams().apply {
-                    width = parentWidth / column
-                    height = parentHeight / row
-                    gravity = Gravity.CENTER
+                    width = viewWidth
+                    height = viewHeight
+                }
+                setOnClickListener {
+                    onDateClicked.invoke(it, data[i])
                 }
             }
-            view.setOnClickListener {
-                onDateClicked.invoke(data[i])
-            }
-            binding.gridCalendar.addView(view)
         }
     }
 }
