@@ -38,6 +38,7 @@ android {
 
 dependencies {
     var room_version = "2.5.0"
+    var calendar_version = "2.3.0"
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -51,4 +52,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+
+    // Calendar
+    implementation "com.kizitonwose.calendar:view:$calendar_version"
 }
