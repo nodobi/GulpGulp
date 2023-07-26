@@ -3,11 +3,12 @@ package com.dohyeok.gulpgulp.view.calendar.contract
 import androidx.recyclerview.widget.RecyclerView
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
-import com.dohyeok.gulpgulp.util.CalendarUtil
 import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
-import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapterContract
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDayBinderContract
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapterContract
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarHeaderBinderContract
+import com.kizitonwose.calendar.core.CalendarMonth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,37 +16,58 @@ import java.time.LocalDate
 
 class CalendarPresenter constructor(
     override var view: CalendarContract.View,
-    override var adapterView: CalendarAdapterContract.View,
-    override var adapterModel: CalendarAdapterContract.Model,
+    override var calendarDayBinder: CalendarDayBinderContract,
+    override var calendarHeaderBinder: CalendarHeaderBinderContract,
     override var detailAdapterView: CalendarDetailAdapterContract.View,
     override var detailAdapterModel: CalendarDetailAdapterContract.Model,
     override var drinkRepository: DrinkRepository,
     private var spUtils: SPUtils
 ) : CalendarContract.Presenter {
+
+    // Displaying Calendar Date
+    private var calendarDate: LocalDate = LocalDate.now()
+    private var calendarDetailDate: LocalDate = LocalDate.now()
+
+
     init {
-        adapterModel.apply{
-            onDateClicked = {
-                onDateClickListener(it)
+        calendarDayBinder.apply {
+            onClickDayView = { newDate, oldDate ->
+                onDateClickListener(newDate, oldDate)
             }
         }
-        detailAdapterModel.currentDate = LocalDate.now()
+
     }
 
-    override fun updateAdapterData() {
-        adapterModel.updateSize(7, CalendarUtil.getCalendarWeekCnt(adapterModel.currentDate))
-        adapterModel.updateData(CalendarUtil.getDateList(adapterModel.currentDate))
-        adapterView.notifyAdapter()
-        updateDate()
+    override var onCalendarScroll: (CalendarMonth) -> Unit = { calendarMonth ->
+        calendarDate = calendarMonth.yearMonth.atDay(1)
+        view.updateCalendarDate(calendarDate)
+        calendarDayBinder.selectedDate?.let {
+            view.notifyCalendarDateChanged(it)
+            calendarDayBinder.selectedDate = null
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val drinkResultMap = mutableMapOf<LocalDate, Boolean>()
+            calendarMonth.weekDays.forEach {weeks ->
+                weeks.forEach {calendarDay ->
+                    drinkRepository.loadDrinkGoal(calendarDay.date)?.let { drinkGoal ->
+                        drinkResultMap.put(drinkGoal.date, drinkGoal.isComplete)
+                    }
+                }
+            }
+            calendarDayBinder.drinkResultMap = drinkResultMap.toMap()
+            view.notifyCalendarMonthChanged(calendarMonth.yearMonth)
+        }
     }
 
     override fun updateDate() {
-        view.updateCalendarDate(adapterModel.currentDate)
-        view.updateCalendarDetailDate(detailAdapterModel.currentDate)
+        view.updateCalendarDate(calendarDate)
+        view.updateCalendarDetailDate(calendarDetailDate)
     }
 
     override fun updateDetailAdapterData() {
         CoroutineScope(Dispatchers.Main).launch {
-            detailAdapterModel.updateDrinkData(drinkRepository.loadDrinkRecords(detailAdapterModel.currentDate))
+            detailAdapterModel.updateDrinkData(drinkRepository.loadDrinkRecords(calendarDetailDate))
             detailAdapterView.notifyDataChanged()
         }
     }
@@ -53,7 +75,7 @@ class CalendarPresenter constructor(
     override fun updateProgress() {
         CoroutineScope(Dispatchers.Main).launch {
             view.changeProgressPercent(
-                (drinkRepository.loadDrinkAmount()
+                (drinkRepository.loadDrinkAmount(calendarDetailDate)
                     .toFloat() / spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000) * 100).toInt()
             )
         }
@@ -65,17 +87,13 @@ class CalendarPresenter constructor(
     }
 
     override fun setAdapterEvents() {
-        view.setCalendarEvents(onPrev = {
-            adapterModel.apply {
-                currentDate = currentDate.minusMonths(1)
-            }
-            updateAdapterData()
-        }, onNext = {
-            adapterModel.apply {
-                currentDate = currentDate.plusMonths(1)
-            }
-            updateAdapterData()
-        })
+        view.setCalendarEvents( onPrev = {
+            calendarDate = calendarDate.minusMonths(1)
+            view.moveCalendar(calendarDate)
+        }) {
+            calendarDate = calendarDate.plusMonths(1)
+            view.moveCalendar(calendarDate)
+        }
 
         view.attachItemTouchHelper(object : ItemTouchCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -98,10 +116,10 @@ class CalendarPresenter constructor(
 
     private fun updateDetailProgresses() {
         CoroutineScope(Dispatchers.Main).launch {
-            val goal = drinkRepository.loadDrinkGoal(detailAdapterModel.currentDate)?.amount
+            val goal = drinkRepository.loadDrinkGoal(calendarDetailDate)?.amount
                 ?: spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
             view.changeDetailProgressPercent(
-                (drinkRepository.loadDrinkAmount(detailAdapterModel.currentDate) * 100f / goal).toInt()
+                (drinkRepository.loadDrinkAmount(calendarDetailDate) * 100f / goal).toInt()
             )
         }
     }
@@ -109,15 +127,22 @@ class CalendarPresenter constructor(
     private fun updateDetailDrinkAmount() {
         CoroutineScope(Dispatchers.Main).launch {
             view.changeDetailDrinkAmount(
-                drinkRepository.loadDrinkAmount(detailAdapterModel.currentDate)
+                drinkRepository.loadDrinkAmount(calendarDetailDate)
             )
         }
     }
 
-    private fun onDateClickListener(date: LocalDate) {
-        detailAdapterModel.currentDate = date
-        view.updateCalendarDetailDate(date)
-        updateDetailAdapterData()
-        updateDetails()
+
+    private fun onDateClickListener(newDate: LocalDate, oldDate: LocalDate?) {
+        if(newDate != oldDate) {
+            calendarDetailDate = newDate
+            view.notifyCalendarDateChanged(newDate)
+            oldDate?.let { view.notifyCalendarDateChanged(oldDate) }
+
+            updateProgress()
+            view.updateCalendarDetailDate(calendarDetailDate)
+            updateDetailAdapterData()
+            updateDetails()
+        }
     }
 }

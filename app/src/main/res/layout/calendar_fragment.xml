@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back_24dp"
-        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
         app:layout_constraintTop_toTopOf="@id/text_calendar_date"
         app:layout_constraintBottom_toBottomOf="@id/text_calendar_date" />
 
@@ -56,8 +56,8 @@
         android:layout_marginTop="50dp"
         android:layout_weight="1"
         android:gravity="center"
-        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
-        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
+        app:layout_constraintEnd_toEndOf="@id/calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
         app:layout_constraintTop_toBottomOf="@id/progress_goal" />
 
     <ImageView
@@ -65,18 +65,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_front_24dp"
-        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
+        app:layout_constraintEnd_toEndOf="@id/calendar"
         app:layout_constraintTop_toTopOf="@id/text_calendar_date"
         app:layout_constraintBottom_toBottomOf="@id/text_calendar_date" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_calendar"
+    <com.kizitonwose.calendar.view.CalendarView
+        android:id="@+id/calendar"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/calendar_margin_left"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/calendar_margin_right"
         android:background="@color/blue_200"
+        app:cv_dayViewResource="@layout/calendar_item"
+        app:cv_monthHeaderResource="@layout/calendar_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_calendar_date" />
@@ -86,9 +88,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
-        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
-        app:layout_constraintTop_toBottomOf="@id/recycler_calendar" />
+        app:layout_constraintEnd_toEndOf="@id/calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
+        app:layout_constraintTop_toBottomOf="@id/calendar" />
 
     <TextView
         android:id="@+id/text_calendar_detail_drink_amount"
@@ -110,8 +112,8 @@
         android:progressBackgroundTint="@color/blue_200"
         android:progressDrawable="@drawable/progressbar_horizontal"
         android:progressTint="@color/blue_500"
-        app:layout_constraintEnd_toEndOf="@id/recycler_calendar"
-        app:layout_constraintStart_toStartOf="@id/recycler_calendar"
+        app:layout_constraintEnd_toEndOf="@id/calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
         app:layout_constraintTop_toBottomOf="@id/text_calendar_detail_date" />
 
     <androidx.recyclerview.widget.RecyclerView

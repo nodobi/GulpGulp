@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dohyeok.gulpgulp.R
@@ -17,48 +16,49 @@ import com.dohyeok.gulpgulp.util.SPUtils
 import com.dohyeok.gulpgulp.util.yearMonthDateKrFormat
 import com.dohyeok.gulpgulp.util.yearMonthKrFormat
 import com.dohyeok.gulpgulp.view.base.BaseFragment
-import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarAdapter
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDayBinder
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapter
+import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarHeaderBinder
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarContract
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarPresenter
+import com.kizitonwose.calendar.core.daysOfWeek
 import java.time.LocalDate
+import java.time.YearMonth
 
 class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContract.View {
-    private lateinit var adapter: CalendarAdapter
+    private lateinit var dayBinder: CalendarDayBinder
+    private lateinit var headerBinder: CalendarHeaderBinder
     private lateinit var detailAdapter: CalendarDetailAdapter
-    lateinit var presenter: CalendarPresenter
+    lateinit var presenter: CalendarContract.Presenter
 
     override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
+        inflater: LayoutInflater, container: ViewGroup?
     ): CalendarFragmentBinding {
         return CalendarFragmentBinding.inflate(layoutInflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = CalendarAdapter(requireContext())
+        dayBinder = CalendarDayBinder()
+        headerBinder = CalendarHeaderBinder()
         detailAdapter = CalendarDetailAdapter(requireContext())
         presenter = CalendarPresenter(
-            this,
-            adapter,
-            adapter,
-            detailAdapter,
-            detailAdapter,
-            DrinkRepository.apply {
+            this, dayBinder, headerBinder, detailAdapter, detailAdapter, DrinkRepository.apply {
                 drinkLocalDataSource = DrinkLocalDataSource.apply {
                     drinkDao = DrinkDatabase.getInstance(requireContext()).drinkDao()
                 }
-            },
-            SPUtils(requireContext())
+            }, SPUtils(requireContext())
         )
 
-        initRecyclers()
+        initCalendar()
+        initRecycler()
 
         presenter.updateDate()
         presenter.updateProgress()
         presenter.updateDetails()
 
+
     }
+
 
     override fun updateCalendarDate(date: LocalDate) {
         binding.textCalendarDate.text = date.yearMonthKrFormat
@@ -75,15 +75,11 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
 
     override fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit)) {
         AlertDialog.Builder(requireContext())
-            .setTitle(resources.getString(R.string.calendar_delete_dialog_title))
-            .setPositiveButton(
+            .setTitle(resources.getString(R.string.calendar_delete_dialog_title)).setPositiveButton(
                 resources.getString(R.string.calendar_delete_dialog_positive)
-            ) { _, _ -> onPositive.invoke(Unit) }
-            .setNegativeButton(
+            ) { _, _ -> onPositive.invoke(Unit) }.setNegativeButton(
                 resources.getString(R.string.calendar_delete_dialog_negative)
-            ) { _, _ -> onDismiss.invoke(Unit) }
-            .create()
-            .show()
+            ) { _, _ -> onDismiss.invoke(Unit) }.create().show()
     }
 
     override fun changeProgressPercent(percent: Int) {
@@ -107,9 +103,26 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
     }
 
-    override fun setCalendarEvents(onPrev: (View) -> Unit, onNext: (View) -> Unit) {
-        binding.imageCalendarPrev.setOnClickListener(onPrev)
-        binding.imageCalendarNext.setOnClickListener(onNext)
+    override fun setCalendarEvents(onPrev: () -> Unit, onNext: () -> Unit) {
+        binding.imageCalendarPrev.setOnClickListener {
+            onPrev()
+        }
+        binding.imageCalendarNext.setOnClickListener {
+            onNext()
+        }
+    }
+
+    override fun moveCalendar(date: LocalDate) {
+        binding.calendar.smoothScrollToDate(date)
+        updateCalendarDate(date)
+    }
+
+    override fun notifyCalendarDateChanged(date: LocalDate) {
+        binding.calendar.notifyDateChanged(date)
+    }
+
+    override fun notifyCalendarMonthChanged(yearMonth: YearMonth) {
+        binding.calendar.notifyMonthChanged(yearMonth)
     }
 
     private fun changeDetailGroupVisibility(isVisible: Boolean) {
@@ -120,21 +133,35 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         }
     }
 
-    private fun initRecyclers() {
-        binding.recyclerCalendar.apply {
-            adapter = this@CalendarFragment.adapter
-            layoutManager = GridLayoutManager(requireContext(), 7)
-
-        }
-
+    private fun initRecycler() {
         binding.recyclerCalendarDetailDrinkList.apply {
             adapter = this@CalendarFragment.detailAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
-        presenter.updateAdapterData()
-        presenter.updateDetailAdapterData()
 
+        presenter.updateDetailAdapterData()
         presenter.setAdapterEvents()
     }
+
+
+    private fun initCalendar() {
+        binding.calendar.dayBinder = dayBinder
+        binding.calendar.monthHeaderBinder = headerBinder
+
+        val daysOfWeek = daysOfWeek()
+        val currentMonth = YearMonth.now()
+        val startMonth = currentMonth.minusMonths(200)
+        val endMonth = currentMonth.plusMonths(200)
+
+        binding.calendar.apply {
+            setup(startMonth, endMonth, daysOfWeek.first())
+            scrollToMonth(currentMonth)
+            monthScrollListener = { month ->
+                presenter.onCalendarScroll(month)
+            }
+        }
+    }
+
+
 }
