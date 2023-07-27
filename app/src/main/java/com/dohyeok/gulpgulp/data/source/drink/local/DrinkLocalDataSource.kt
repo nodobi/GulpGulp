@@ -51,8 +51,18 @@ object DrinkLocalDataSource : DrinkDataSource {
         drinkDao.loadDrinkGoal(date)
     }
 
-    override suspend fun updateDrinkGoal(date: LocalDate, isComplete: Boolean) = withContext(Dispatchers.IO) {
-        drinkDao.updateDrinkGoal(date, isComplete)
+    override suspend fun loadDrinkGoals(dates: List<LocalDate>): List<DrinkGoal?> = withContext(Dispatchers.IO){
+        mutableListOf<DrinkGoal?>().apply {
+            dates.forEach {date ->
+                this.add(drinkDao.loadDrinkGoal(date))
+            }
+        }
+    }
+
+    override suspend fun updateDrinkGoal(date: LocalDate, isComplete: Boolean) {
+        withContext(Dispatchers.IO) {
+            drinkDao.updateDrinkGoal(date, isComplete)
+        }
     }
 
     override suspend fun updateDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) {

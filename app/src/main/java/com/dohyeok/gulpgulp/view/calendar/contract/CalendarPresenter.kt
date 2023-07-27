@@ -46,6 +46,7 @@ class CalendarPresenter constructor(
             calendarDayBinder.selectedDate = null
         }
 
+        updateProgress()
         CoroutineScope(Dispatchers.IO).launch {
             val drinkResultMap = mutableMapOf<LocalDate, Boolean>()
             calendarMonth.weekDays.forEach {weeks ->
@@ -74,10 +75,22 @@ class CalendarPresenter constructor(
 
     override fun updateProgress() {
         CoroutineScope(Dispatchers.Main).launch {
-            view.changeProgressPercent(
-                (drinkRepository.loadDrinkAmount(calendarDetailDate)
-                    .toFloat() / spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000) * 100).toInt()
-            )
+            val calendarMonthDateList = mutableListOf<LocalDate>()
+            var completeCnt = 0
+
+            for(i in 1 .. calendarDate.month.maxLength()) {
+                calendarMonthDateList.add(calendarDate.withDayOfMonth(i))
+            }
+
+            val drinkGoals = drinkRepository.loadDrinkGoals(calendarMonthDateList)
+            for(goal in drinkGoals) {
+                goal?.let {
+                    if(it.isComplete) completeCnt++
+                }
+            }
+
+            view.changeProgressPercent((completeCnt.toFloat() / calendarDate.month.maxLength() * 100).toInt())
+
         }
     }
 
@@ -139,7 +152,6 @@ class CalendarPresenter constructor(
             view.notifyCalendarDateChanged(newDate)
             oldDate?.let { view.notifyCalendarDateChanged(oldDate) }
 
-            updateProgress()
             view.updateCalendarDetailDate(calendarDetailDate)
             updateDetailAdapterData()
             updateDetails()

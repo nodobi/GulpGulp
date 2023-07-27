@@ -48,6 +48,10 @@ object DrinkRepository : DrinkDataSource {
         return drinkLocalDataSource.loadDrinkGoal(date)
     }
 
+    override suspend fun loadDrinkGoals(dates: List<LocalDate>): List<DrinkGoal?> {
+        return drinkLocalDataSource.loadDrinkGoals(dates)
+    }
+
     override suspend fun updateDrinkGoal(date: LocalDate, isComplete: Boolean) {
         drinkLocalDataSource.updateDrinkGoal(date, isComplete)
     }

@@ -20,6 +20,7 @@ interface DrinkDataSource {
 
     suspend fun insertDrinkGoal(drinkGoal: DrinkGoal)
     suspend fun loadDrinkGoal(date: LocalDate) : DrinkGoal?
+    suspend fun loadDrinkGoals(dates: List<LocalDate>) : List<DrinkGoal?>
 
     suspend fun updateDrinkGoal(date: LocalDate, isComplete: Boolean)
     suspend fun updateDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean)
