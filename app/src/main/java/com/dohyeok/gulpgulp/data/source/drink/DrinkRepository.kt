@@ -63,4 +63,8 @@ object DrinkRepository : DrinkDataSource {
     override suspend fun upsertDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) {
         drinkLocalDataSource.upsertDrinkGoal(date, amount, isComplete)
     }
+
+    override suspend fun getLastDrinkOrder(): Int {
+        return drinkLocalDataSource.getLastDrinkOrder()
+    }
 }

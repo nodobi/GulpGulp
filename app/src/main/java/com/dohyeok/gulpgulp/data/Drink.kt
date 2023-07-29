@@ -12,8 +12,8 @@ class Drink constructor(
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "amount") var amount: Int
 ) {
-    @ColumnInfo(name = "id")
-    @PrimaryKey
+    @ColumnInfo(name = "order") var order: Int = 0
+
+    @ColumnInfo(name = "id") @PrimaryKey
     var id: String = UUID.randomUUID().toString()
-    var order: Int = -1
 }

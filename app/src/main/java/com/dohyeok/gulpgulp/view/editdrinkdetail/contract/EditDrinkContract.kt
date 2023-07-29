@@ -8,12 +8,15 @@ import com.dohyeok.gulpgulp.view.editdrinkdetail.adapter.ExistDrinkAdapterContra
 interface EditDrinkContract {
     interface View: BaseContract.View {
         var presenter: EditDrinkPresenter
+
+        fun updateBottomSheetIcon(resId: Int)
     }
     interface Presenter: BaseContract.Presenter<View> {
         var adapterView: ExistDrinkAdapterContract.View
         var adapterModel: ExistDrinkAdapterContract.Model
         var drinkRepository: DrinkRepository
         var onDrinkAddBtnClick: (Drink) -> Unit
+        var onIconSelected: (Int) -> Unit
 
         fun updateDrinkData()
     }

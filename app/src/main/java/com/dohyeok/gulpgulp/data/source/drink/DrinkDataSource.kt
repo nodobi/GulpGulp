@@ -26,4 +26,6 @@ interface DrinkDataSource {
     suspend fun updateDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean)
     suspend fun upsertDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean)
 
+    suspend fun getLastDrinkOrder(): Int
+
 }

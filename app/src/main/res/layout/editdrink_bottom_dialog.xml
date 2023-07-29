@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/image_drink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/ic_bottle_24dp"
         android:layout_marginTop="@dimen/margin_small"
         app:layout_constraintStart_toStartOf="@id/text_icon_title"
@@ -39,6 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_small"
+        android:inputType="text"
         android:hint="@string/bottom_sheet_drink_title_hint"
         app:layout_constraintStart_toStartOf="@id/text_drink_title"
         app:layout_constraintEnd_toStartOf="@id/text_amount_title"

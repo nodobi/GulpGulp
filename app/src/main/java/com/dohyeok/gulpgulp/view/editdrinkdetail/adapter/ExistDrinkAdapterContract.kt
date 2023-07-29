@@ -4,11 +4,13 @@ import com.dohyeok.gulpgulp.data.Drink
 
 interface ExistDrinkAdapterContract {
     interface View {
-        fun notifyDataInited()
+        var onDrinkClick: (Drink) -> Unit
 
+        fun notifyDataInited()
     }
     interface Model {
         fun updateDrinkList(drinkList: List<Drink>)
         fun addDrink(drink: Drink) : Int
+        fun removeDrink(drink: Drink)
     }
 }

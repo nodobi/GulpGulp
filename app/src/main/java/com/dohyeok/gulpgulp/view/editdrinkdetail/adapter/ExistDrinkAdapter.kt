@@ -9,6 +9,7 @@ import com.dohyeok.gulpgulp.databinding.EditdrinkExistDrinkItemBinding
 
 class ExistDrinkAdapter(private val context: Context) : RecyclerView.Adapter<ExistDrinkViewHolder>(),
     ExistDrinkAdapterContract.View, ExistDrinkAdapterContract.Model {
+    override lateinit var onDrinkClick: (Drink) -> Unit
     var drinkList : ArrayList<Drink> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExistDrinkViewHolder {
@@ -18,7 +19,11 @@ class ExistDrinkAdapter(private val context: Context) : RecyclerView.Adapter<Exi
                 parent,
                 false
             )
-        )
+        ).apply {
+            this.itemView.setOnClickListener {
+                onDrinkClick(this.drink)
+            }
+        }
     }
 
     override fun notifyDataInited() {
@@ -40,6 +45,12 @@ class ExistDrinkAdapter(private val context: Context) : RecyclerView.Adapter<Exi
     override fun addDrink(drink: Drink): Int {
         drinkList.add(drink)
         notifyItemInserted(drinkList.size)
-        return drinkList.size
+        return drink.order
+    }
+
+    override fun removeDrink(drink: Drink) {
+        val idx = drinkList.indexOf(drink)
+        drinkList.removeAt(idx)
+        notifyItemRemoved(idx)
     }
 }

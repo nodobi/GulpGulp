@@ -52,4 +52,7 @@ interface DrinkDao {
             updateDrinkGoal(date, amount, isComplete)
         }
     }
+
+    @Query("SELECT MAX([order]) FROM drinks")
+    fun getLastDrinkOrder(): Int
 }

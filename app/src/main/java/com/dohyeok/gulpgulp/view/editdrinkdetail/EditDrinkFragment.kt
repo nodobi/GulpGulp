@@ -23,6 +23,7 @@ class EditDrinkFragment : BaseFragment<EditdrinkFragmentBinding>(), EditDrinkCon
     private lateinit var existAdapter: ExistDrinkAdapter
     private lateinit var bottomSheetBinding: EditdrinkBottomDialogBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var iconSelectionDialog: IconSelectionDialogFragment
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -47,6 +48,7 @@ class EditDrinkFragment : BaseFragment<EditdrinkFragmentBinding>(), EditDrinkCon
         }
 
         bottomSheetDialog = initBottomSheetDialog()
+        initIconSelectionDialog()
 
         binding.btnAddDrink.setOnClickListener {
             bottomSheetDialog.show()
@@ -59,18 +61,42 @@ class EditDrinkFragment : BaseFragment<EditdrinkFragmentBinding>(), EditDrinkCon
             EditdrinkBottomDialogBinding.inflate(layoutInflater, binding.root, false)
         bottomSheetBinding.imageDrink.tag = R.drawable.ic_bottle_24dp
 
+        bottomSheetBinding.imageDrink.setOnClickListener {
+            iconSelectionDialog.show(parentFragmentManager, "dialog")
+        }
+
         bottomSheetBinding.btnCommit.setOnClickListener {
             presenter.onDrinkAddBtnClick.invoke(
                 Drink(
                     bottomSheetBinding.imageDrink.tag as Int,
                     bottomSheetBinding.edittextDrinkName.text.toString(),
-                    bottomSheetBinding.edittextDrinkAmount.text.toString().toInt()
+                    bottomSheetBinding.edittextDrinkAmount.text.let {
+                        if(it.toString() == "") return@let 0
+                        else return@let it.toString().toInt()
+                    }
                 )
             )
             bottomSheetDialog.dismiss()
         }
         return BottomSheetDialog(requireContext()).apply {
             setContentView(bottomSheetBinding.root)
+        }
+    }
+
+    override fun updateBottomSheetIcon(resId: Int) {
+        bottomSheetBinding.imageDrink.apply {
+            setImageResource(resId)
+            tag = resId
+        }
+    }
+
+    private fun initIconSelectionDialog() {
+        iconSelectionDialog = IconSelectionDialogFragment().apply {
+            onIconClick = {
+                this@EditDrinkFragment.presenter.onIconSelected(it)
+                dismiss()
+            }
+
         }
     }
 }

@@ -72,4 +72,8 @@ object DrinkLocalDataSource : DrinkDataSource {
     override suspend fun upsertDrinkGoal(date: LocalDate, amount: Int, isComplete: Boolean) = withContext(Dispatchers.IO) {
         drinkDao.upsertDrinkGoal(date, amount, isComplete)
     }
+
+    override suspend fun getLastDrinkOrder(): Int = withContext(Dispatchers.IO) {
+        return@withContext drinkDao.getLastDrinkOrder()
+    }
 }
