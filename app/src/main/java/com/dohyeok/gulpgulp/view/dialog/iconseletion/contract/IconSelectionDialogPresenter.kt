@@ -1,13 +1,13 @@
-package com.dohyeok.gulpgulp.view.editdrinkdetail.contract
+package com.dohyeok.gulpgulp.view.dialog.iconseletion.contract
 
 import com.dohyeok.gulpgulp.R
-import com.dohyeok.gulpgulp.view.editdrinkdetail.adapter.IconSelectionDialogAdapterContract
+import com.dohyeok.gulpgulp.view.dialog.iconseletion.adapter.IconSelectionDialogAdapterContract
 
 class IconSelectionDialogPresenter(
     override var view: IconSelectionDialogContract.View,
     override var iconAdapterView: IconSelectionDialogAdapterContract.View,
     override var iconAdapterModel: IconSelectionDialogAdapterContract.Model,
-): IconSelectionDialogContract.Presenter {
+) : IconSelectionDialogContract.Presenter {
 
     override fun initIconIdData() {
         iconAdapterModel.iconIdData = mutableListOf<Int>().apply {

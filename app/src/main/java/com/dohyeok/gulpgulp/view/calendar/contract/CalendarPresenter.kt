@@ -49,8 +49,8 @@ class CalendarPresenter constructor(
         updateProgress()
         CoroutineScope(Dispatchers.IO).launch {
             val drinkResultMap = mutableMapOf<LocalDate, Boolean>()
-            calendarMonth.weekDays.forEach {weeks ->
-                weeks.forEach {calendarDay ->
+            calendarMonth.weekDays.forEach { weeks ->
+                weeks.forEach { calendarDay ->
                     drinkRepository.loadDrinkGoal(calendarDay.date)?.let { drinkGoal ->
                         drinkResultMap.put(drinkGoal.date, drinkGoal.isComplete)
                     }
@@ -78,14 +78,14 @@ class CalendarPresenter constructor(
             val calendarMonthDateList = mutableListOf<LocalDate>()
             var completeCnt = 0
 
-            for(i in 1 .. calendarDate.month.maxLength()) {
+            for (i in 1..calendarDate.month.maxLength()) {
                 calendarMonthDateList.add(calendarDate.withDayOfMonth(i))
             }
 
             val drinkGoals = drinkRepository.loadDrinkGoals(calendarMonthDateList)
-            for(goal in drinkGoals) {
+            for (goal in drinkGoals) {
                 goal?.let {
-                    if(it.isComplete) completeCnt++
+                    if (it.isComplete) completeCnt++
                 }
             }
 
@@ -100,7 +100,7 @@ class CalendarPresenter constructor(
     }
 
     override fun setAdapterEvents() {
-        view.setCalendarEvents( onPrev = {
+        view.setCalendarEvents(onPrev = {
             calendarDate = calendarDate.minusMonths(1)
             view.moveCalendar(calendarDate)
         }) {
@@ -111,7 +111,7 @@ class CalendarPresenter constructor(
         view.attachItemTouchHelper(object : ItemTouchCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos: Int = viewHolder.adapterPosition
-                val item: DrinkRecord = detailAdapterModel.recordData[pos]
+                val item: DrinkRecord = detailAdapterModel.getRecordData(pos)
                 detailAdapterView.notifyItemDraw(pos)
 
                 view.showDialog(onPositive = {
@@ -147,7 +147,7 @@ class CalendarPresenter constructor(
 
 
     private fun onDateClickListener(newDate: LocalDate, oldDate: LocalDate?) {
-        if(newDate != oldDate) {
+        if (newDate != oldDate) {
             calendarDetailDate = newDate
             view.notifyCalendarDateChanged(newDate)
             oldDate?.let { view.notifyCalendarDateChanged(oldDate) }

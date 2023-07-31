@@ -1,4 +1,4 @@
-package com.dohyeok.gulpgulp.view.editdrinkdetail.adapter
+package com.dohyeok.gulpgulp.view.dialog.iconseletion.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,9 +9,8 @@ import com.dohyeok.gulpgulp.databinding.EditdrinkIconselectionDialogItemBinding
 class IconSelectionDialogAdapter(private val context: Context) :
     RecyclerView.Adapter<IconSelectionDialogViewHolder>(), IconSelectionDialogAdapterContract.View,
     IconSelectionDialogAdapterContract.Model {
-//    override lateinit var iconIdData: MutableList<Int>
     override var iconIdData: MutableList<Int> = mutableListOf()
-    override lateinit var onItemClick: (Int) -> Unit
+    override lateinit var onItemClick: (Int, String) -> Unit
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,8 +22,11 @@ class IconSelectionDialogAdapter(private val context: Context) :
             )
         )
         holder.binding.editdrinkDialogItemImage.apply {
-            setOnClickListener{
-                onItemClick.invoke(holder.imageResId)
+            setOnClickListener {
+                onItemClick.invoke(
+                    holder.imageResId,
+                    context.resources.getResourceEntryName(holder.imageResId)
+                )
             }
         }
         return holder

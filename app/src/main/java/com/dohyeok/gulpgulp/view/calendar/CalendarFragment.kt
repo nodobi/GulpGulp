@@ -55,8 +55,6 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         presenter.updateDate()
         presenter.updateProgress()
         presenter.updateDetails()
-
-
     }
 
 

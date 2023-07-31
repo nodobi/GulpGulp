@@ -11,7 +11,7 @@ class CalendarDetailAdapter(private val context: Context) :
     RecyclerView.Adapter<CalendarDetailViewHolder>(), CalendarDetailAdapterContract.View,
     CalendarDetailAdapterContract.Model {
 
-    override var recordData: ArrayList<DrinkRecord> = arrayListOf()
+    private var recordData: ArrayList<Pair<DrinkRecord, Int>> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarDetailViewHolder {
         return CalendarDetailViewHolder(
@@ -24,7 +24,7 @@ class CalendarDetailAdapter(private val context: Context) :
     }
 
     override fun onBindViewHolder(holder: CalendarDetailViewHolder, position: Int) {
-        holder.onBind(recordData[position])
+        holder.onBind(recordData[position].first, recordData[position].second)
     }
 
     override fun getItemCount(): Int {
@@ -32,7 +32,11 @@ class CalendarDetailAdapter(private val context: Context) :
     }
 
     override fun updateDrinkData(loadDrinks: List<DrinkRecord>) {
-        recordData = ArrayList(loadDrinks)
+        recordData = ArrayList<Pair<DrinkRecord, Int>>(loadDrinks.size).apply {
+            loadDrinks.forEach {
+                add(Pair(it, iconNameToIconResId(it.drink.iconResName)))
+            }
+        }
     }
 
     override fun notifyDataChanged() {
@@ -49,8 +53,15 @@ class CalendarDetailAdapter(private val context: Context) :
     }
 
     override fun restoreItem(item: DrinkRecord, position: Int) {
-        recordData.add(position, item)
+        recordData.add(position, Pair(item, iconNameToIconResId(item.drink.iconResName)))
         notifyItemInserted(position)
     }
+
+    override fun getRecordData(pos: Int): DrinkRecord {
+        return recordData[pos].first
+    }
+
+    private fun iconNameToIconResId(resName: String): Int =
+        context.resources.getIdentifier(resName, "drawable", context.packageName)
 
 }

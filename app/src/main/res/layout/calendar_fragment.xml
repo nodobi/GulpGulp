@@ -45,9 +45,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_calendar_date"
         app:layout_constraintStart_toStartOf="@id/calendar"
-        app:layout_constraintTop_toTopOf="@id/text_calendar_date"
-        app:layout_constraintBottom_toBottomOf="@id/text_calendar_date" />
+        app:layout_constraintTop_toTopOf="@id/text_calendar_date" />
 
     <TextView
         android:id="@+id/text_calendar_date"
@@ -65,9 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_front_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_calendar_date"
         app:layout_constraintEnd_toEndOf="@id/calendar"
-        app:layout_constraintTop_toTopOf="@id/text_calendar_date"
-        app:layout_constraintBottom_toBottomOf="@id/text_calendar_date" />
+        app:layout_constraintTop_toTopOf="@id/text_calendar_date" />
 
     <com.kizitonwose.calendar.view.CalendarView
         android:id="@+id/calendar"
@@ -126,7 +126,7 @@
         app:layout_constraintTop_toBottomOf="@id/text_calendar_detail_drink_amount" />
 
     <Button
-        android:id="@+id/btn_calendar_edit"
+        android:id="@+id/btn_add_missing_drinks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_top_medium"

@@ -1,4 +1,4 @@
-package com.dohyeok.gulpgulp.view.editdrinkdetail
+package com.dohyeok.gulpgulp.view.dialog.iconseletion
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,17 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dohyeok.gulpgulp.databinding.EditdrinkIconselectionDialogBinding
-import com.dohyeok.gulpgulp.view.editdrinkdetail.adapter.IconSelectionDialogAdapter
-import com.dohyeok.gulpgulp.view.editdrinkdetail.contract.IconSelectionDialogContract
-import com.dohyeok.gulpgulp.view.editdrinkdetail.contract.IconSelectionDialogPresenter
+import com.dohyeok.gulpgulp.view.dialog.iconseletion.adapter.IconSelectionDialogAdapter
+import com.dohyeok.gulpgulp.view.dialog.iconseletion.contract.IconSelectionDialogContract
+import com.dohyeok.gulpgulp.view.dialog.iconseletion.contract.IconSelectionDialogPresenter
 
-class IconSelectionDialogFragment: DialogFragment(), IconSelectionDialogContract.View {
+class IconSelectionDialogFragment : DialogFragment(), IconSelectionDialogContract.View {
     private lateinit var presenter: IconSelectionDialogContract.Presenter
     private lateinit var iconSelectionDialogAdapter: IconSelectionDialogAdapter
     private var _binding: EditdrinkIconselectionDialogBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var onIconClick: (Int) -> (Unit)
+    lateinit var onIconClick: (Int, String) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,

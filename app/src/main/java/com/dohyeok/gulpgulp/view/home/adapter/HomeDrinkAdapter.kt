@@ -10,7 +10,7 @@ import com.dohyeok.gulpgulp.databinding.HomeDrinkItemBinding
 class HomeDrinkAdapter(private val context: Context) : RecyclerView.Adapter<HomeDrinkViewHolder>(),
     HomeDrinkAdapterContract.View, HomeDrinkAdapterContract.Model {
     override lateinit var onDrinkClicked: (Drink) -> Unit
-    var drinkData: List<Drink> = listOf()
+    var drinkData: List<Pair<Drink, Int>> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeDrinkViewHolder {
         return HomeDrinkViewHolder(
             HomeDrinkItemBinding.inflate(
@@ -18,11 +18,15 @@ class HomeDrinkAdapter(private val context: Context) : RecyclerView.Adapter<Home
                 parent,
                 false
             )
-        )
+        ).apply {
+            itemView.setOnClickListener {
+                onDrinkClicked.invoke(drink)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: HomeDrinkViewHolder, position: Int) {
-        holder.onBind(drinkData[position], onDrinkClicked)
+        holder.onBind(drinkData[position].first, drinkData[position].second)
     }
 
     override fun getItemCount(): Int {
@@ -30,10 +34,17 @@ class HomeDrinkAdapter(private val context: Context) : RecyclerView.Adapter<Home
     }
 
     override fun updateDrinkList(drinkList: List<Drink>) {
-        drinkData = drinkList
+        drinkData = mutableListOf<Pair<Drink, Int>>().apply {
+            drinkList.forEach {
+                add(Pair(it, iconNameToIconResId(it.iconResName)))
+            }
+        }
     }
 
     override fun notifyDataUpdate() {
         notifyItemRangeInserted(0, drinkData.size)
     }
+
+    private fun iconNameToIconResId(iconName: String): Int =
+        context.resources.getIdentifier(iconName, "drawable", context.packageName)
 }

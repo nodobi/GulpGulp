@@ -9,10 +9,9 @@ interface CalendarDetailAdapterContract {
     }
 
     interface Model {
-        var recordData: ArrayList<DrinkRecord>
-
         fun updateDrinkData(loadDrinks: List<DrinkRecord>)
         fun removeItem(position: Int)
         fun restoreItem(item: DrinkRecord, position: Int)
+        fun getRecordData(pos: Int): DrinkRecord
     }
 }

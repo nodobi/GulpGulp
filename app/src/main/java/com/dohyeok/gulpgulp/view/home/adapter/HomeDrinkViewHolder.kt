@@ -7,14 +7,13 @@ import com.dohyeok.gulpgulp.databinding.HomeDrinkItemBinding
 
 class HomeDrinkViewHolder(private val binding: HomeDrinkItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
+    lateinit var drink: Drink
 
     @SuppressLint("ResourceType")
-    fun onBind(drinkRecord: Drink, action: (Drink) -> Unit) {
-        binding.imageHomeDrink.setImageResource(drinkRecord.iconId)
-        binding.textHomeDrink.text = drinkRecord.name
-        binding.root.setOnClickListener {
-            action.invoke(drinkRecord)
-        }
+    fun onBind(drink: Drink, resId: Int) {
+        this.drink = drink
+        binding.imageHomeDrink.setImageResource(resId)
+        binding.textHomeDrink.text = drink.name
     }
 
 }

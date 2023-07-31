@@ -10,8 +10,8 @@ class CalendarDetailViewHolder(private val binding: CalendarDetailItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("ResourceType")
-    fun onBind(item: DrinkRecord) {
-        binding.imageDrink.setImageResource(item.drink.iconId)
+    fun onBind(item: DrinkRecord, iconResId: Int) {
+        binding.imageDrink.setImageResource(iconResId)
         binding.textDrink.text = item.drink.name
         binding.textDrinkAmount.text = item.drink.amount.toString()
         binding.textDrinkTime.text = item.time.toDatabaseFormat
