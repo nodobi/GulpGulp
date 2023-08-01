@@ -11,6 +11,7 @@ interface DrinkDataSource {
     suspend fun loadDrinkRecords(): List<DrinkRecord>
     suspend fun loadDrinkRecords(date: LocalDate): List<DrinkRecord>
     suspend fun deleteDrinkRecord(drinkRecord: DrinkRecord)
+    suspend fun updateDrinkRecord(drinkRecord: DrinkRecord, drink: Drink)
 
     suspend fun insertDrink(drink: Drink)
     suspend fun deleteDrink(drink: Drink)

@@ -1,5 +1,7 @@
 package com.dohyeok.gulpgulp.view.calendar.contract
 
+import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.view.base.BaseContract
 import com.dohyeok.gulpgulp.view.calendar.ItemTouchCallback
@@ -14,7 +16,7 @@ interface CalendarContract {
     interface View : BaseContract.View {
         fun updateCalendarDate(date: LocalDate)
         fun attachItemTouchHelper(itemTouchCallback: ItemTouchCallback)
-        fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit))
+        fun showDialog(onPositive: ((Unit) -> Unit), onNegative: ((Unit) -> Unit))
         fun changeProgressPercent(percent: Int)
         fun changeDetailProgressPercent(percent: Int)
         fun changeDetailDrinkAmount(amount: Int)
@@ -24,6 +26,8 @@ interface CalendarContract {
         fun moveCalendar(date: LocalDate)
         fun notifyCalendarDateChanged(date: LocalDate)
         fun notifyCalendarMonthChanged(yearMonth: YearMonth)
+
+        fun showEditDrinkBottomSheetDialog(drinkRecord: DrinkRecord, iconResId: Int)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -34,6 +38,7 @@ interface CalendarContract {
         var drinkRepository: DrinkRepository
 
         var onCalendarScroll: (CalendarMonth) -> Unit
+        var onDrinkRecordEdit: (DrinkRecord, Drink) -> Unit
 
         fun setAdapterEvents()
 

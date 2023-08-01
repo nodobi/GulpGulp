@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dohyeok.gulpgulp.R
+import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkLocalDataSource
@@ -21,6 +23,7 @@ import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarDetailAdapter
 import com.dohyeok.gulpgulp.view.calendar.adapter.CalendarHeaderBinder
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarContract
 import com.dohyeok.gulpgulp.view.calendar.contract.CalendarPresenter
+import com.dohyeok.gulpgulp.view.dialog.editdrink.EditDrinkBottomSheetDialogFragment
 import com.kizitonwose.calendar.core.daysOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -71,13 +74,13 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         helper.attachToRecyclerView(binding.recyclerCalendarDetailDrinkList)
     }
 
-    override fun showDialog(onPositive: ((Unit) -> Unit), onDismiss: ((Unit) -> Unit)) {
+    override fun showDialog(onPositive: ((Unit) -> Unit), onNegative: ((Unit) -> Unit)) {
         AlertDialog.Builder(requireContext())
             .setTitle(resources.getString(R.string.calendar_delete_dialog_title)).setPositiveButton(
                 resources.getString(R.string.calendar_delete_dialog_positive)
             ) { _, _ -> onPositive.invoke(Unit) }.setNegativeButton(
                 resources.getString(R.string.calendar_delete_dialog_negative)
-            ) { _, _ -> onDismiss.invoke(Unit) }.create().show()
+            ) { _, _ -> onNegative.invoke(Unit) }.create().show()
     }
 
     override fun changeProgressPercent(percent: Int) {
@@ -121,6 +124,15 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
 
     override fun notifyCalendarMonthChanged(yearMonth: YearMonth) {
         binding.calendar.notifyMonthChanged(yearMonth)
+    }
+
+    override fun showEditDrinkRecordDialog(drinkRecord: DrinkRecord, iconResId: Int) {
+        EditDrinkBottomSheetDialogFragment().apply {
+            updateTargetDrinkData(drinkRecord, iconResId)
+            onCommit = {editedDrink ->
+                presenter.onDrinkRecordEdit.invoke(drinkRecord, editedDrink)
+            }
+        }.show(parentFragmentManager, "editDrinkDialog")
     }
 
     private fun changeDetailGroupVisibility(isVisible: Boolean) {

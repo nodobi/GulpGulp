@@ -27,6 +27,10 @@ object DrinkLocalDataSource : DrinkDataSource {
         drinkDao.deleteDrinkRecord(drinkRecord)
     }
 
+    override suspend fun updateDrinkRecord(drinkRecord: DrinkRecord, drink: Drink) = withContext(Dispatchers.IO){
+        drinkDao.updateDrinkRecord(drinkRecord.id, drink.iconResName, drink.name, drink.amount, drink.id)
+    }
+
     override suspend fun insertDrink(drink: Drink) = withContext(Dispatchers.IO) {
         drinkDao.insertDrink(drink)
     }

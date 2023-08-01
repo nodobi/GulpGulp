@@ -24,6 +24,10 @@ object DrinkRepository : DrinkDataSource {
         drinkLocalDataSource.deleteDrinkRecord(drinkRecord)
     }
 
+    override suspend fun updateDrinkRecord(drinkRecord: DrinkRecord, drink: Drink) {
+        drinkLocalDataSource.updateDrinkRecord(drinkRecord, drink)
+    }
+
     override suspend fun insertDrink(drink: Drink) {
         drinkLocalDataSource.insertDrink(drink)
     }

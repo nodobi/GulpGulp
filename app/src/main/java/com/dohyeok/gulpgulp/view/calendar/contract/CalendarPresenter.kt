@@ -1,6 +1,7 @@
 package com.dohyeok.gulpgulp.view.calendar.contract
 
 import androidx.recyclerview.widget.RecyclerView
+import com.dohyeok.gulpgulp.data.Drink
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.util.SPUtils
@@ -28,6 +29,8 @@ class CalendarPresenter constructor(
     private var calendarDate: LocalDate = LocalDate.now()
     private var calendarDetailDate: LocalDate = LocalDate.now()
 
+    override lateinit var onCalendarScroll: (CalendarMonth) -> Unit
+    override lateinit var onDrinkRecordEdit: (DrinkRecord, Drink) -> Unit
 
     init {
         calendarDayBinder.apply {
@@ -35,30 +38,12 @@ class CalendarPresenter constructor(
                 onDateClickListener(newDate, oldDate)
             }
         }
+        detailAdapterModel.onDrinkDetailClick =
+            { DrinkRecord, resId -> onDrinkDetailClickListener(DrinkRecord, resId) }
 
-    }
-
-    override var onCalendarScroll: (CalendarMonth) -> Unit = { calendarMonth ->
-        calendarDate = calendarMonth.yearMonth.atDay(1)
-        view.updateCalendarDate(calendarDate)
-        calendarDayBinder.selectedDate?.let {
-            view.notifyCalendarDateChanged(it)
-            calendarDayBinder.selectedDate = null
-        }
-
-        updateProgress()
-        CoroutineScope(Dispatchers.IO).launch {
-            val drinkResultMap = mutableMapOf<LocalDate, Boolean>()
-            calendarMonth.weekDays.forEach { weeks ->
-                weeks.forEach { calendarDay ->
-                    drinkRepository.loadDrinkGoal(calendarDay.date)?.let { drinkGoal ->
-                        drinkResultMap.put(drinkGoal.date, drinkGoal.isComplete)
-                    }
-                }
-            }
-            calendarDayBinder.drinkResultMap = drinkResultMap.toMap()
-            view.notifyCalendarMonthChanged(calendarMonth.yearMonth)
-        }
+        onCalendarScroll = { calendarMonth -> onCalendarScrollListener(calendarMonth) }
+        onDrinkRecordEdit =
+            { drinkRecord, editedDrink -> onDrinkEditedListener(drinkRecord, editedDrink) }
     }
 
     override fun updateDate() {
@@ -120,7 +105,7 @@ class CalendarPresenter constructor(
                         drinkRepository.deleteDrinkRecord(item)
                         updateDetails()
                     }
-                }, onDismiss = {
+                }, onNegative = {
 
                 })
             }
@@ -145,6 +130,28 @@ class CalendarPresenter constructor(
         }
     }
 
+    private fun onCalendarScrollListener(calendarMonth: CalendarMonth) {
+        calendarDate = calendarMonth.yearMonth.atDay(1)
+        view.updateCalendarDate(calendarDate)
+        calendarDayBinder.selectedDate?.let {
+            view.notifyCalendarDateChanged(it)
+            calendarDayBinder.selectedDate = null
+        }
+
+        updateProgress()
+        CoroutineScope(Dispatchers.IO).launch {
+            val drinkResultMap = mutableMapOf<LocalDate, Boolean>()
+            calendarMonth.weekDays.forEach { weeks ->
+                weeks.forEach { calendarDay ->
+                    drinkRepository.loadDrinkGoal(calendarDay.date)?.let { drinkGoal ->
+                        drinkResultMap.put(drinkGoal.date, drinkGoal.isComplete)
+                    }
+                }
+            }
+            calendarDayBinder.drinkResultMap = drinkResultMap
+            view.notifyCalendarMonthChanged(calendarMonth.yearMonth)
+        }
+    }
 
     private fun onDateClickListener(newDate: LocalDate, oldDate: LocalDate?) {
         if (newDate != oldDate) {
@@ -155,6 +162,33 @@ class CalendarPresenter constructor(
             view.updateCalendarDetailDate(calendarDetailDate)
             updateDetailAdapterData()
             updateDetails()
+        }
+    }
+
+    private fun onDrinkDetailClickListener(drinkRecord: DrinkRecord, resId: Int) {
+        view.showEditDrinkRecordDialog(drinkRecord, resId)
+    }
+
+    private fun onDrinkEditedListener(drinkRecord: DrinkRecord, editedDrink: Drink) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val isUpdateAmount = drinkRecord.drink.amount != editedDrink.amount
+            val idx = detailAdapterModel.updateItem(drinkRecord.copy(drink = editedDrink).apply {
+                id = drinkRecord.id
+            })
+            detailAdapterView.notifyItemChanged(idx)
+
+            drinkRepository.updateDrinkRecord(drinkRecord, editedDrink)
+            if (isUpdateAmount) {
+                val goal = spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
+                val isComplete = drinkRepository.loadDrinkAmount(drinkRecord.date) >= goal
+                drinkRepository.upsertDrinkGoal(drinkRecord.date, goal, isComplete)
+                calendarDayBinder.drinkResultMap?.set(drinkRecord.date, isComplete)
+                view.notifyCalendarDateChanged(drinkRecord.date)
+                updateProgress()
+            }
+
+            updateDetails()
+
         }
     }
 }

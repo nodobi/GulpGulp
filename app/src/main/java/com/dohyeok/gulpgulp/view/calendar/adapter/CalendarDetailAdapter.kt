@@ -12,6 +12,7 @@ class CalendarDetailAdapter(private val context: Context) :
     CalendarDetailAdapterContract.Model {
 
     private var recordData: ArrayList<Pair<DrinkRecord, Int>> = arrayListOf()
+    override lateinit var onDrinkDetailClick: (DrinkRecord, Int) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarDetailViewHolder {
         return CalendarDetailViewHolder(
@@ -20,7 +21,14 @@ class CalendarDetailAdapter(private val context: Context) :
                     context
                 ), parent, false
             )
-        )
+        ).apply {
+            itemView.setOnClickListener {
+                onDrinkDetailClick.invoke(
+                    recordData[bindingAdapterPosition].first,
+                    recordData[bindingAdapterPosition].second
+                )
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: CalendarDetailViewHolder, position: Int) {
@@ -59,6 +67,16 @@ class CalendarDetailAdapter(private val context: Context) :
 
     override fun getRecordData(pos: Int): DrinkRecord {
         return recordData[pos].first
+    }
+
+    override fun updateItem(newRecord: DrinkRecord): Int {
+        recordData.forEachIndexed { index, data ->
+            if(data.first.id == newRecord.id) {
+                recordData[index] = Pair(newRecord, iconNameToIconResId(newRecord.drink.iconResName))
+                return index
+            }
+        }
+        return -1
     }
 
     private fun iconNameToIconResId(resName: String): Int =

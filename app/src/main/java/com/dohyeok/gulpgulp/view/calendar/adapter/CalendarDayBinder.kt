@@ -13,7 +13,7 @@ class CalendarDayBinder: MonthDayBinder<CalendarDayBinder.DayViewContainer>, Cal
 {
     override lateinit var onClickDayView: (selectedDate: LocalDate, oldDate: LocalDate?) -> Unit
 
-    override var drinkResultMap: Map<LocalDate, Boolean>? = null
+    override var drinkResultMap: MutableMap<LocalDate, Boolean>? = null
     override var selectedDate: LocalDate? = null
 
     override fun bind(container: DayViewContainer, data: CalendarDay) {

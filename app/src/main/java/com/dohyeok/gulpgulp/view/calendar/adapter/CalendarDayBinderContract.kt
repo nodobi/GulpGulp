@@ -5,5 +5,5 @@ import java.time.LocalDate
 interface CalendarDayBinderContract {
     var onClickDayView: (selectedDate: LocalDate, oldDate: LocalDate?) -> Unit
     var selectedDate: LocalDate?
-    var drinkResultMap: Map<LocalDate, Boolean>?
+    var drinkResultMap: MutableMap<LocalDate, Boolean>?
 }

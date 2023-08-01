@@ -20,6 +20,14 @@ interface DrinkDao {
     @Delete
     fun deleteDrinkRecord(drinkRecord: DrinkRecord)
 
+    @Query("UPDATE drink_records SET " +
+            "drink_icon_name = :iconResName," +
+            "drink_name = :drink_name," +
+            "drink_amount = :drink_amount," +
+            "drink_id = :drink_id " +
+            "WHERE recordId = :recordId")
+    fun updateDrinkRecord(recordId: String, iconResName: String, drink_name: String, drink_amount: Int, drink_id: String)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDrink(drink: Drink)
 
@@ -29,7 +37,7 @@ interface DrinkDao {
     @Query("SELECT * FROM drinks")
     fun loadDrinks(): List<Drink>
 
-    @Query("SELECT SUM(amount) FROM drink_records WHERE date = :date")
+    @Query("SELECT SUM(drink_amount) FROM drink_records WHERE date = :date")
     fun loadDrinkAmount(date: LocalDate): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "drinks")
-class Drink constructor(
+data class Drink constructor(
     @ColumnInfo(name = "icon_name") var iconResName: String,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "amount") var amount: Int

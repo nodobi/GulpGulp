@@ -9,8 +9,8 @@ import java.time.LocalTime
 import java.util.*
 
 @Entity(tableName = "drink_records")
-class DrinkRecord constructor(
-    @Embedded var drink: Drink,
+data class DrinkRecord constructor(
+    @Embedded(prefix = "drink_") var drink: Drink,
     @ColumnInfo(name = "date") var date: LocalDate,
     @ColumnInfo(name = "time") var time: LocalTime
 ){

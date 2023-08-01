@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dohyeok.gulpgulp.R
 import com.dohyeok.gulpgulp.data.Drink
+import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.databinding.EditdrinkBottomDialogBinding
 import com.dohyeok.gulpgulp.view.dialog.editdrink.contract.EditDrinkBottomSheetDialogContract
 import com.dohyeok.gulpgulp.view.dialog.editdrink.contract.EditDrinkBottomSheetDialogPresenter
@@ -19,6 +19,7 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     private lateinit var presenter: EditDrinkBottomSheetDialogPresenter
     private lateinit var iconSelectionDialog: IconSelectionDialogFragment
+    private var targetDrink: Pair<Drink, Int>? = null
 
     override lateinit var onCommit: (Drink) -> Unit
     override fun onCreateView(
@@ -38,12 +39,20 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = EditDrinkBottomSheetDialogPresenter(this)
 
-        binding.imageDrink.apply {
-            setImageResource(R.drawable.ic_bottle_24dp)
-            tag = "ic_bottle_24dp"
-            setOnClickListener {
-                presenter.onImageClick.invoke(it)
+        if(targetDrink == null) {
+            targetDrink = Pair(Drink("ic_bottle_24dp", "water", 250), resources.getIdentifier("ic_bottle_24dp", "drawable", requireContext().packageName))
+        }
+
+        binding.apply {
+            imageDrink.apply {
+                setImageResource(targetDrink!!.second)
+                tag = targetDrink!!.first.iconResName
+                setOnClickListener {
+                    presenter.onImageClick.invoke(it)
+                }
             }
+            edittextDrinkName.setText(targetDrink!!.first.name)
+            edittextDrinkAmount.setText(targetDrink!!.first.amount.toString())
         }
         binding.btnCommit.setOnClickListener {
             onCommit.invoke(
@@ -54,6 +63,7 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         else return@let it.toString().toInt()
                     }
                 ))
+            dismiss()
         }
 
         initIconSelectionDialog()
@@ -64,6 +74,14 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     fun setOnCommitBtnClickListener(action: (Drink) -> Unit) {
         onCommit = action
+    }
+
+    fun updateTargetDrinkData(drink: Drink, iconResId: Int?) {
+        targetDrink = Pair(drink, iconResId ?: resources.getIdentifier(drink.iconResName, "drawable", requireContext().packageName))
+    }
+
+    fun updateTargetDrinkData(drinkRecord: DrinkRecord, iconResId: Int?) {
+        updateTargetDrinkData(drinkRecord.drink, iconResId)
     }
 
     private fun initIconSelectionDialog() {
