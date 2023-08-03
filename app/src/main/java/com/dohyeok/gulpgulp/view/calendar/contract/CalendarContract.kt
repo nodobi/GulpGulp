@@ -27,7 +27,8 @@ interface CalendarContract {
         fun notifyCalendarDateChanged(date: LocalDate)
         fun notifyCalendarMonthChanged(yearMonth: YearMonth)
 
-        fun showEditDrinkBottomSheetDialog(drinkRecord: DrinkRecord, iconResId: Int)
+        fun showEditDrinkRecordDialog(drinkRecord: DrinkRecord, iconResId: Int)
+        fun showAddDrinkRecordDialog()
     }
 
     interface Presenter : BaseContract.Presenter<View> {
@@ -40,6 +41,8 @@ interface CalendarContract {
         var onCalendarScroll: (CalendarMonth) -> Unit
         var onDrinkRecordEdit: (DrinkRecord, Drink) -> Unit
 
+
+        var onAddMissingDrinkRecordBtnClick: (Drink) -> Unit
         fun setAdapterEvents()
 
         fun updateDetailAdapterData()

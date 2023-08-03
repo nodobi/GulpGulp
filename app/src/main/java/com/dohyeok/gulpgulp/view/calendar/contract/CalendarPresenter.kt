@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 
 class CalendarPresenter constructor(
     override var view: CalendarContract.View,
@@ -32,6 +33,8 @@ class CalendarPresenter constructor(
     override lateinit var onCalendarScroll: (CalendarMonth) -> Unit
     override lateinit var onDrinkRecordEdit: (DrinkRecord, Drink) -> Unit
 
+    override lateinit var onAddMissingDrinkRecordBtnClick: (Drink) -> Unit
+
     init {
         calendarDayBinder.apply {
             onClickDayView = { newDate, oldDate ->
@@ -44,6 +47,7 @@ class CalendarPresenter constructor(
         onCalendarScroll = { calendarMonth -> onCalendarScrollListener(calendarMonth) }
         onDrinkRecordEdit =
             { drinkRecord, editedDrink -> onDrinkEditedListener(drinkRecord, editedDrink) }
+        onAddMissingDrinkRecordBtnClick = { drink -> onAddMissingDrinkBtnClickListener(drink) }
     }
 
     override fun updateDate() {
@@ -175,20 +179,40 @@ class CalendarPresenter constructor(
             val idx = detailAdapterModel.updateItem(drinkRecord.copy(drink = editedDrink).apply {
                 id = drinkRecord.id
             })
+
             detailAdapterView.notifyItemChanged(idx)
 
             drinkRepository.updateDrinkRecord(drinkRecord, editedDrink)
+            updateDetails()
+
             if (isUpdateAmount) {
                 val goal = spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
                 val isComplete = drinkRepository.loadDrinkAmount(drinkRecord.date) >= goal
-                drinkRepository.upsertDrinkGoal(drinkRecord.date, goal, isComplete)
                 calendarDayBinder.drinkResultMap?.set(drinkRecord.date, isComplete)
                 view.notifyCalendarDateChanged(drinkRecord.date)
+
+
+                drinkRepository.upsertDrinkGoal(drinkRecord.date, goal, isComplete)
                 updateProgress()
             }
 
-            updateDetails()
 
+        }
+    }
+
+    private fun onAddMissingDrinkBtnClickListener(drink: Drink) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val drinkRecord = DrinkRecord(drink, calendarDetailDate, LocalTime.now())
+            drinkRepository.insertDrinkRecord(drinkRecord)
+            updateDetails()
+            updateDetailAdapterData()
+            val goal = spUtils.getInt(SPUtils.PREFERENCE_KEY_GOAL, 1000)
+            val isComplete = drinkRepository.loadDrinkAmount(calendarDetailDate) >= goal
+            calendarDayBinder.drinkResultMap?.set(drinkRecord.date, isComplete)
+            view.notifyCalendarDateChanged(drinkRecord.date)
+
+            drinkRepository.upsertDrinkGoal(calendarDetailDate, goal, isComplete)
+            updateProgress()
         }
     }
 }

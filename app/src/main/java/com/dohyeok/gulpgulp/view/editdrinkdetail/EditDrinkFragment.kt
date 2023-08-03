@@ -52,7 +52,7 @@ class EditDrinkFragment : BaseFragment<EditdrinkFragmentBinding>(), EditDrinkCon
 
     private fun initBottomSheetDialog() {
         bottomSheetDialog = EditDrinkBottomSheetDialogFragment().apply {
-            setOnCommitBtnClickListener { editedDrink ->
+            onCommit = { editedDrink, _ ->
                 this@EditDrinkFragment.presenter.onDrinkAddBtnClick.invoke(
                     editedDrink
                 )

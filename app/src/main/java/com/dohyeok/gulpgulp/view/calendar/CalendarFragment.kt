@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dohyeok.gulpgulp.R
-import com.dohyeok.gulpgulp.data.Drink
 import com.dohyeok.gulpgulp.data.DrinkRecord
 import com.dohyeok.gulpgulp.data.source.drink.DrinkRepository
 import com.dohyeok.gulpgulp.data.source.drink.local.DrinkDatabase
@@ -58,6 +57,10 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
         presenter.updateDate()
         presenter.updateProgress()
         presenter.updateDetails()
+
+        binding.btnAddMissingDrinks.setOnClickListener {
+            showAddDrinkRecordDialog()
+        }
     }
 
 
@@ -129,10 +132,19 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(), CalendarContra
     override fun showEditDrinkRecordDialog(drinkRecord: DrinkRecord, iconResId: Int) {
         EditDrinkBottomSheetDialogFragment().apply {
             updateTargetDrinkData(drinkRecord, iconResId)
-            onCommit = {editedDrink ->
+            onCommit = {editedDrink, _ ->
                 presenter.onDrinkRecordEdit.invoke(drinkRecord, editedDrink)
             }
         }.show(parentFragmentManager, "editDrinkDialog")
+    }
+
+    override fun showAddDrinkRecordDialog() {
+        EditDrinkBottomSheetDialogFragment().apply {
+            onCommit = { newDrink, addTime ->
+                presenter.onAddMissingDrinkRecordBtnClick.invoke(newDrink)
+            }
+            useTimePicker(true)
+        }.show(parentFragmentManager, "AddMissingDrinkDialog")
     }
 
     private fun changeDetailGroupVisibility(isVisible: Boolean) {

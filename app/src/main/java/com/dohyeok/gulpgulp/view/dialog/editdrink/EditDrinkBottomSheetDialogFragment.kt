@@ -11,6 +11,7 @@ import com.dohyeok.gulpgulp.view.dialog.editdrink.contract.EditDrinkBottomSheetD
 import com.dohyeok.gulpgulp.view.dialog.editdrink.contract.EditDrinkBottomSheetDialogPresenter
 import com.dohyeok.gulpgulp.view.dialog.iconseletion.IconSelectionDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.time.LocalTime
 
 class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
     EditDrinkBottomSheetDialogContract.View {
@@ -20,8 +21,9 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
     private lateinit var presenter: EditDrinkBottomSheetDialogPresenter
     private lateinit var iconSelectionDialog: IconSelectionDialogFragment
     private var targetDrink: Pair<Drink, Int>? = null
+    private var isUseTimePicker = false
 
-    override lateinit var onCommit: (Drink) -> Unit
+    override lateinit var onCommit: (Drink, LocalTime) -> Unit
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,8 +41,11 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = EditDrinkBottomSheetDialogPresenter(this)
 
-        if(targetDrink == null) {
-            targetDrink = Pair(Drink("ic_bottle_24dp", "water", 250), resources.getIdentifier("ic_bottle_24dp", "drawable", requireContext().packageName))
+        if (targetDrink == null) {
+            targetDrink = Pair(
+                Drink("ic_bottle_24dp", "water", 250),
+                resources.getIdentifier("ic_bottle_24dp", "drawable", requireContext().packageName)
+            )
         }
 
         binding.apply {
@@ -53,6 +58,11 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
             }
             edittextDrinkName.setText(targetDrink!!.first.name)
             edittextDrinkAmount.setText(targetDrink!!.first.amount.toString())
+            timepickerDrinkTime.visibility = if(isUseTimePicker) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
         binding.btnCommit.setOnClickListener {
             onCommit.invoke(
@@ -61,27 +71,34 @@ class EditDrinkBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     binding.edittextDrinkAmount.text.let {
                         if (it.toString() == "") return@let 0
                         else return@let it.toString().toInt()
-                    }
-                ))
+                    }),
+                LocalTime.of(binding.timepickerDrinkTime.hour, binding.timepickerDrinkTime.minute)
+            )
             dismiss()
         }
-
         initIconSelectionDialog()
         presenter.onImageClick = { _ ->
             iconSelectionDialog.show(parentFragmentManager, "iconSelectionDialog")
         }
     }
 
-    fun setOnCommitBtnClickListener(action: (Drink) -> Unit) {
-        onCommit = action
-    }
-
     fun updateTargetDrinkData(drink: Drink, iconResId: Int?) {
-        targetDrink = Pair(drink, iconResId ?: resources.getIdentifier(drink.iconResName, "drawable", requireContext().packageName))
+        targetDrink = Pair(
+            drink,
+            iconResId ?: resources.getIdentifier(
+                drink.iconResName,
+                "drawable",
+                requireContext().packageName
+            )
+        )
     }
 
     fun updateTargetDrinkData(drinkRecord: DrinkRecord, iconResId: Int?) {
         updateTargetDrinkData(drinkRecord.drink, iconResId)
+    }
+
+    fun useTimePicker(isUse: Boolean) {
+        isUseTimePicker = isUse
     }
 
     private fun initIconSelectionDialog() {
