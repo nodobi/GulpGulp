@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">GulpGulp</string>
+    <string name="main_drink_amount_unit">%1$d ml</string>
+    <string name="base_drink_title">water</string>
+    <string name="setting_manage_drink_title">음료 관리</string>
+    <string name="setting_manage_goal_title">목표 관리</string>
+
+
+    <!--    drinkFormat-->
+    <string name="drink_format_ml">%1$d ml</string>
+
+<!--    dateFormat-->
+    <string name="date_format_yearMonthDate">%1$d년 %2$d월 %3$d일</string>
+    <string name="date_format_yearMonth">%1$d년 %2$d월</string>
+
+    <string name="add_missing_record">기록 추가하기</string>
 </resources>

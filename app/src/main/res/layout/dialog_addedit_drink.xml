@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_pickers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="numberpicker_record_hour, numberpicker_record_min, numberpicker_record_sec"/>
+
+    <TextView
+        android:id="@+id/text_img_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        android:gravity="center"
+        android:text="이미지"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintEnd_toStartOf="@id/text_name_title"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/text_name_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:text="이름"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintBottom_toBottomOf="@id/text_img_title"
+        app:layout_constraintEnd_toStartOf="@id/text_amount_title"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toEndOf="@id/text_img_title"
+        app:layout_constraintTop_toTopOf="@id/text_img_title" />
+
+    <TextView
+        android:id="@+id/text_amount_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:text="용량"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintBottom_toBottomOf="@id/text_name_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@id/text_name_title"
+        app:layout_constraintTop_toTopOf="@id/text_name_title" />
+
+    <ImageView
+        android:id="@+id/img_drink_icon"
+        android:layout_width="@dimen/standard_touch_size"
+        android:layout_height="@dimen/standard_touch_size"
+        android:src="@drawable/ic_calendar_24dp"
+        app:layout_constraintEnd_toEndOf="@id/text_img_title"
+        app:layout_constraintStart_toStartOf="@id/text_img_title"
+        app:layout_constraintTop_toBottomOf="@id/text_img_title" />
+
+    <EditText
+        android:id="@+id/edittext_drink_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/text_name_title"
+        app:layout_constraintStart_toStartOf="@id/text_name_title"
+        app:layout_constraintTop_toBottomOf="@id/text_name_title" />
+
+    <EditText
+        android:id="@+id/edittext_drink_amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/text_amount_title"
+        app:layout_constraintStart_toStartOf="@id/text_amount_title"
+        app:layout_constraintTop_toBottomOf="@id/text_amount_title" />
+
+    <NumberPicker
+        android:id="@+id/numberpicker_record_hour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        app:layout_constraintEnd_toStartOf="@id/numberpicker_record_min"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edittext_drink_amount" />
+
+    <NumberPicker
+        android:id="@+id/numberpicker_record_min"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/numberpicker_record_hour"
+        app:layout_constraintEnd_toStartOf="@id/numberpicker_record_sec"
+        app:layout_constraintStart_toEndOf="@id/numberpicker_record_hour"
+        app:layout_constraintTop_toTopOf="@id/numberpicker_record_hour" />
+
+    <NumberPicker
+        android:id="@+id/numberpicker_record_sec"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/numberpicker_record_min"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/numberpicker_record_min"
+        app:layout_constraintTop_toTopOf="@id/numberpicker_record_min" />
+
+    <Button
+        android:id="@+id/btn_commit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="추가하기"
+        android:textSize="@dimen/text_size_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/numberpicker_record_hour" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/standard_touch_size"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical">
+    <ImageView
+        android:id="@+id/img_drink_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_close_24dp"
+        android:layout_weight="1"
+        />
+    <TextView
+        android:id="@+id/text_drink_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BasicDrinkName"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_weight="4"/>
+
+    <TextView
+        android:id="@+id/text_drink_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1000"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_weight="2"/>
+
+</LinearLayout>

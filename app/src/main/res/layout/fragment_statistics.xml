@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_calendar_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.kizitonwose.calendar.view.CalendarView
+        android:id="@+id/calendar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_size_xlarge"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginEnd="@dimen/margin_padding_size_xlarge"
+        app:cv_daySize="square"
+        app:cv_dayViewResource="@layout/item_statistics_calendar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_calendar_date" />
+
+    <TextView
+        android:id="@+id/text_date_records"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        android:text="0000년00월00일"
+        app:layout_constraintEnd_toEndOf="@id/calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
+        app:layout_constraintTop_toBottomOf="@id/calendar" />
+
+    <ProgressBar
+        android:id="@+id/progress_date"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        android:indeterminateOnly="false"
+        android:max="100"
+        android:progress="50"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/progress_statistics_date_progress"
+        app:layout_constraintEnd_toEndOf="@id/calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
+        app:layout_constraintTop_toBottomOf="@id/text_date_records" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_date_records"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        app:layout_constraintEnd_toEndOf="@id/calendar"
+        app:layout_constraintStart_toStartOf="@id/calendar"
+        app:layout_constraintTop_toBottomOf="@id/progress_date"
+        app:layout_constraintBottom_toTopOf="@id/btn_add_missing"/>
+
+    <Button
+        android:id="@+id/btn_add_missing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_missing_record"
+        app:layout_constraintTop_toBottomOf="@id/recycler_date_records"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
